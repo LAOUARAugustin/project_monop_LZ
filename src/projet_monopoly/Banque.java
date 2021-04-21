@@ -1,19 +1,10 @@
 package projet_monopoly;
 
-import java.util.ArrayList;
-
-public class Banque {
-	private int solde;
-	private ArrayList<CasesProprietes> listeProprietes=new ArrayList<CasesProprietes>();
+class Banque extends Joueur {
+	
 	private int nbMaisons;
 	private int nbHotel;
 	
-	public int getSolde() {
-		return solde;
-	}
-	public void setSolde(int solde) {
-		this.solde = solde;
-	}
 	public int getNbMaisons() {
 		return nbMaisons;
 	}
@@ -32,40 +23,15 @@ public class Banque {
 		}
 		this.nbHotel = nbHotel;
 	}
-	public ArrayList<CasesProprietes> getListeProprietes() {
-		ArrayList<CasesProprietes> listeCopie = new ArrayList<CasesProprietes>(this.listeProprietes);
-		return listeCopie;
-	}
 	
-	public void setListeProprietes(ArrayList<CasesProprietes> listeProprietes) {
-		this.listeProprietes = listeProprietes;
-	}
-	
-	public Banque(int solde, int nbMaisons, int nbHotel, ArrayList<CasesProprietes> prop) {
-		
-		this.setSolde(solde);
+	public Banque(int solde, int nbMaisons, int nbHotel) {
+		super(solde);
 		this.setNbMaisons(nbMaisons);
 		this.setNbHotel(nbHotel);
-		this.listeProprietes= prop;
-	}
-	
-	public void ajouterProprietes(CasesProprietes prop)
-	{
-		this.listeProprietes.add(prop);
-	}
-	public void enleverProprietes(CasesProprietes prop)
-	{
-		if ( this.listeProprietes.contains(prop))
-		{
-			this.listeProprietes.remove(prop);
-		}
-		else 
-		{
-			//exception 
-		}
 	}
 	
 	
+	//methodes 
 	
 
 }

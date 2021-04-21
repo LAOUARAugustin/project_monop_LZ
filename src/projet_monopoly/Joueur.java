@@ -2,70 +2,42 @@ package projet_monopoly;
 
 import java.util.ArrayList;
 
-public class Joueur {
-	private String nom;
-	private int solde;
-	private boolean enPrison;
-	private ArrayList<CasesProprietes> proprietes=new ArrayList<CasesProprietes>();
-	private Cases position;
-	public String getNom() {
-		return nom;
-	}
-
-	public void setNom(String nom) {
-		this.nom = nom;
-	}
-
+public abstract class Joueur {
+	protected int solde;
+	protected ArrayList<CasesProprietes> listeProprietes=new ArrayList<CasesProprietes>();
+	
 	public int getSolde() {
 		return solde;
 	}
-
 	public void setSolde(int solde) {
 		this.solde = solde;
 	}
-
-	public boolean isEnPrison() {
-		return enPrison;
-	}
-
-	public void setEnPrison(boolean enPrison) {
-		this.enPrison = enPrison;
-	}
-
 	public ArrayList<CasesProprietes> getProprietes() {
-		ArrayList<CasesProprietes> listCopie = new ArrayList<CasesProprietes>(this.proprietes);	
+		ArrayList<CasesProprietes> listCopie = new ArrayList<CasesProprietes>(this.listeProprietes);	
 		return listCopie;
 	}
 
 	public void setProprietes(ArrayList<CasesProprietes> proprietes) {
-		this.proprietes = proprietes;
-	}
-
-	public Cases getPosition() {
-		return position;
-	}
-
-	public void setPosition(Cases position) {
-		this.position = position;
-	}
+		this.listeProprietes = proprietes;
+	}	
 	
-	public Joueur(String nom, int solde, boolean enPrison, ArrayList<CasesProprietes> proprietes, Cases position) {
-		 
-		this.setNom(nom);
+	
+	
+	public Joueur(int solde) {
 		this.setSolde(solde);
-		this.setEnPrison(enPrison);
-		this.setPosition(position);
 	}
-
+	//methodes
+	
 	public void ajouterProprietes(CasesProprietes prop)
 	{
-		this.proprietes.add(prop);
+		this.listeProprietes.add(prop);
 	}
+	
 	public void enleverProprietes(CasesProprietes prop)
 	{
-		if ( this.proprietes.contains(prop))
+		if ( this.listeProprietes.contains(prop))
 		{
-			this.proprietes.remove(prop);
+			this.listeProprietes.remove(prop);
 		}
 		else 
 		{
@@ -73,10 +45,44 @@ public class Joueur {
 		}
 	}
 	
-	public void seDeplacer(int num)
-	{
-		// parcourir l'arraylist et assigner joueur.position a la cases de position i + num
+	public boolean possede(CasesProprietes prop) {
+		if(this.listeProprietes.contains(prop)) {
+			return true;
+		}
+		return false;
+	}
+	
+	public void vendre(CasesProprietes propriete, Joueur acheteur) {
+		int prix = propriete.getPrixBase();
+		if(acheteur.getSolde()<prix) {
+			//exception
+		}
+		if(!(this.possede(propriete))) {
+			//exception
+		}
+		this.setSolde(this.getSolde()+prix);
+		acheteur.setSolde(acheteur.getSolde()-prix);
+		this.enleverProprietes(propriete);
+		acheteur.ajouterProprietes(propriete);
+		propriete.setProprietaire(acheteur);
 		
 	}
-
+	
+	
+	public void acheter(CasesProprietes propriete, Joueur vendeur) {
+		int prix = propriete.getPrixBase();
+		if(this.getSolde()<prix) {
+			//exception
+		}
+		if(!(vendeur.possede(propriete))) {
+			//exception
+		}
+		this.setSolde(this.getSolde()-prix);
+		vendeur.setSolde(vendeur.getSolde()+prix);
+		vendeur.enleverProprietes(propriete);
+		this.ajouterProprietes(propriete);
+		propriete.setProprietaire(this);
+	}
+	
+	
 }

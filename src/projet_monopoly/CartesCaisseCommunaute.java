@@ -4,7 +4,6 @@ public class CartesCaisseCommunaute extends CasesCartes{
 
 	public CartesCaisseCommunaute(int numeroCase, String nomCase) {
 		super(numeroCase, nomCase);
-		// TODO Auto-generated constructor stub
 	}
 
 }

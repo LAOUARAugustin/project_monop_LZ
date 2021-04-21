@@ -9,6 +9,8 @@ public class Terrain extends CasesProprietes {
 	private int loyerHotel;
 	private int nbMaison;
 	private boolean Hotel;
+	private GroupeTerrain groupe;
+	
 	
 	public int getLoyerDeBase() {
 		return loyerDeBase;
@@ -66,8 +68,7 @@ public class Terrain extends CasesProprietes {
 	}
 	public void setLoyerHotel(int loyerHotel) {
 		if(this.loyerHotel<0)
-		{ //exception 
-			
+		{ //exception  
 		}
 		this.loyerHotel = loyerHotel;
 	}
@@ -87,19 +88,43 @@ public class Terrain extends CasesProprietes {
 	public void setHotel(boolean hotel) {
 		this.Hotel = hotel;
 	}
-	public Terrain(int numeroCase, String nomCase, int prixBase, int hypotheque, int loyerDeBase, int loyer1Maison,
-			int loyer2Maison, int loyer3Maison, int loyer4Maison, int loyerHotel ){
-		super(numeroCase, nomCase, prixBase, hypotheque);
-		this.loyerDeBase = loyerDeBase;
-		this.loyer1Maison = loyer1Maison;
-		this.loyer2Maison = loyer2Maison;
-		this.loyer3Maison = loyer3Maison;
-		this.loyer4Maison = loyer4Maison;
-		this.loyerHotel = loyerHotel;
-		this.nbMaison = 0;
-		Hotel = false;
+	public GroupeTerrain getGroupe() {
+		return this.groupe;
+	}
+	public void setGroupe(GroupeTerrain groupe) {
+		this.groupe = groupe;
 	}
 	
+	public Terrain(int numeroCase, String nomCase, int prixBase, int hypotheque, int loyerDeBase, int loyer1Maison,
+			int loyer2Maison, int loyer3Maison, int loyer4Maison, int loyerHotel, GroupeTerrain groupe ){
+		super(numeroCase, nomCase, prixBase, hypotheque);
+		this.setLoyerDeBase(loyerDeBase);
+		this.setLoyer1Maison(loyer1Maison);
+		this.setLoyer2Maison(loyer2Maison);
+		this.setLoyer3Maison(loyer3Maison);
+		this.setLoyer4Maison(loyer4Maison);
+		this.setLoyerHotel(loyerHotel);
+		this.setNbMaison(0);
+		this.setHotel(false);
+		this.setGroupe(groupe);
+	}
+	
+	
+	//methodes 
+	
+	public void ajouterMaison() {
+		if(this.getNbMaison()>3) {
+			//exception
+		}
+		this.setNbMaison(this.getNbMaison()+1);
+	}
+	
+	public void retirerMaison() {
+		if(this.getNbMaison()<1) {
+			//exception
+		}
+		this.setNbMaison(this.getNbMaison()-1);
+	}
 	
 	
 	
