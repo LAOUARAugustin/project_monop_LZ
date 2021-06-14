@@ -1,11 +1,12 @@
-package parser;
+package ParserCases;
 
+import parser.Parser;
 import projet_monopoly.Plateau;
 import projet_monopoly.Case.Terrain;
 
-public class ParserTerrainConstructible extends ParserCases {
+public class ParserTerrainConstructible extends Parser {
 
-	public ParserTerrainConstructible(ParserCases suivant) {
+	public ParserTerrainConstructible(Parser suivant) {
 		super(suivant);
 	}
 
@@ -31,8 +32,8 @@ public class ParserTerrainConstructible extends ParserCases {
 		int Loyer2Maison= Integer.parseInt(mot[8]);
 		int Loyer3Maison=Integer.parseInt(mot[9]);
 		int Loyer4Maison= Integer.parseInt(mot[10]);
-		
 		int LoyerHotel=Integer.parseInt(mot[11]);
+		
 		Terrain T = new Terrain(numCase,nom,prixAchatTerrain,LoyerSansMaison,Loyer1Maison,
 				Loyer2Maison,Loyer3Maison,Loyer4Maison,LoyerHotel,Couleur,prixAchatMaison);
 		Plateau.getInstance().ajouterCase(T);

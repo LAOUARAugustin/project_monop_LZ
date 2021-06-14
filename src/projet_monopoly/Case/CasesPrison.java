@@ -1,5 +1,8 @@
 package projet_monopoly.Case;
 
+import projet_monopoly.joueur.Joueur;
+import projet_monopoly.joueur.JoueurHumain;
+
 public class CasesPrison extends Cases{
 
 	public CasesPrison(int numeroCase, String nomCase) {
@@ -7,9 +10,8 @@ public class CasesPrison extends Cases{
 	}
 
 	@Override
-	public void arreteSurLaCase() {
-		// TODO Auto-generated method stub
-		
+	public void arretSurLaCase(JoueurHumain J) {
+		J.AllerEnPrison();
 	}
 
 }

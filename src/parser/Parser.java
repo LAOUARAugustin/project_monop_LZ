@@ -3,30 +3,21 @@ package parser;
 
 import Exception.ParserManquantException;
 
-public abstract class ParserCases {
+public abstract class Parser {
 	
-	// Un parser est en fait un maillon dans une liste chainée...
-	// Cette liste chainée représente une instruction "switch"
-	// Chaque maillon représente un "case" du switch
-	private ParserCases suivant = null;
+	private Parser suivant = null;
 	public static final String separateur = ";";
 	
-	public ParserCases(ParserCases suivant) {
+	public Parser(Parser suivant) {
 		this.suivant = suivant;
 	}
 
-	/**
-	 * La fonction traiter() parcours la liste à la recherche d'un maillon qui sait comment parser
-	 * la ligne. Dans ce cas la ligne est parsée et la recherche s'arrête
-	 * @param ligne la ligne à parser
-	 * @exception lance une exception si quelque chose a mal tourné
-	 */
+
 	public void traiter(String ligne) throws Exception {
 		if (saitParser(ligne)) {
 			parser(ligne);
 		}
 		else if (aUnSuivant()) 
-			// S'il ne sait pas mais qu'il a un suivant dans la liste chaine, il lui repasse la ligne et qu'il se débrouille !
 			getSuivant().traiter(ligne);
 		else {
 			
@@ -35,10 +26,14 @@ public abstract class ParserCases {
 		
 	}
 
-	private ParserCases getSuivant() {
+	private Parser getSuivant() {
 		return suivant;
 	}
-
+	
+	public void setSuivant(Parser P) {
+		this.suivant = P;
+	}
+	
 	private boolean aUnSuivant() {
 		return suivant != null;
 	}

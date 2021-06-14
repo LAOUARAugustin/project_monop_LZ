@@ -1,0 +1,16 @@
+COMMUNAUTE;PAYER;Payez la note du médecin;50
+COMMUNAUTE;ENCAISSER;Erreur de la banque en votre faveur. Recevez 200€;200
+COMMUNAUTE;PAYER;Payez votre Police d'Assurance s'élevant à 50€;50
+COMMUNAUTE;CHANCE;Payez une amende de 10€ ou tirez une carte "CHANCE";10
+COMMUNAUTE;ENCAISSER;Vous héritez de 100€;100
+COMMUNAUTE;ANNIVERSAIRE;C'est votre anniversaire. Chaque joueur doit vous donner 10€;10
+COMMUNAUTE;ENCAISSER;Recevez votre intérêt sur l'emprunt à 7%;25
+COMMUNAUTE;ENCAISSER;Les contributions vous remboursent la somme de 20€;20
+COMMUNAUTE;DEPLACEMENT;Avancez jusqu'à la case départ;OUI;NOM;CASE DEPART;
+COMMUNAUTE;ENCAISSER;Recevez votre revenu annuel;100
+COMMUNAUTE;ENCAISSER;La vente de votre stock vous rapporte;50
+COMMUNAUTE;DEPLACEMENT;Retournez à Belleville;NON;NOM;BOULEVARD DE BELLEVILLE;
+COMMUNAUTE;DEPLACEMENT:Allez en prison ! Avancez tout droit en prison. Ne passez pas par la case départ. Ne recevez pas 200€;NON;NOM;PRISON;
+COMMUNAUTE;ENCAISSER;Vous avez gagné le deuxième prix de beauté. Recevez 10€;10
+COMMUNAUTE;PAYER;Payez l'hôpital 100€;100
+COMMUNAUTE;LIBERATION;Vous êtes libéré de prison. Cette carte peut être conservée jusqu'à ce qu'elle soit utilisée ou vendue.

@@ -2,7 +2,11 @@ package projet_monopoly.joueur;
 
 import java.util.ArrayList;
 
+import Exception.alertException;
+import projet_monopoly.Plateau;
+import projet_monopoly.Case.Cases;
 import projet_monopoly.Case.CasesProprietes;
+import projet_monopoly.Case.Terrain;
 
 public abstract class Joueur {
 	protected String nom;
@@ -39,7 +43,7 @@ public abstract class Joueur {
 		this.listeProprietes.add(prop);
 	}
 	
-	public void enleverProprietes(CasesProprietes prop)
+	public void enleverProprietes(CasesProprietes prop) throws alertException
 	{
 		if ( this.listeProprietes.contains(prop))
 		{
@@ -47,7 +51,8 @@ public abstract class Joueur {
 		}
 		else 
 		{
-			//exception 
+			throw new alertException("Vous ne possedez pas cette propriete");
+
 		}
 	}
 	
@@ -58,49 +63,58 @@ public abstract class Joueur {
 		return false;
 	}
 	
-	public void vendre(CasesProprietes propriete, Joueur acheteur) {
-		int prix = propriete.getPrixBase();
+	public void vendre(CasesProprietes propriete, Joueur acheteur, int prix) throws alertException {
+		Terrain T1 = (Terrain)propriete;
+		for(Cases iterator : this.getProprietes()) {
+			if(iterator instanceof Terrain) {
+				Terrain T2 = ((Terrain) iterator);
+				if(T2.getGroupe().equals(T1.getGroupe()) && (T2.getNbMaison()>0 || T2.isHotel()) ) {
+					throw new alertException("Vous ne pouvez pas vendre une propriété s'il y a des constructions sur le groupe de propriété");
+				}
+			}
+		}
 		if(acheteur.getSolde()<prix) {
-			//exception
+			throw new alertException("Les fonds de l'acheteur sont insuffisants");
 		}
 		if(!(this.possede(propriete))) {
-			//exception
+			throw new alertException("Vous ne possedez pas cette propriete");
 		}
-		this.setSolde(this.getSolde()+prix);
-		acheteur.setSolde(acheteur.getSolde()-prix);
+		acheteur.payerJoueur(prix, this);
 		this.enleverProprietes(propriete);
 		acheteur.ajouterProprietes(propriete);
 		propriete.setProprietaire(acheteur);
-		
-	}
+			}
 	
 	
-	public void acheter(CasesProprietes propriete, Joueur vendeur) {
-		int prix = propriete.getPrixBase();
+	public void acheter(CasesProprietes propriete, Joueur vendeur, int prix) throws alertException {
 		if(this.getSolde()<prix) {
-			//exception
+			throw new alertException("Les fonds de l'acheteur sont insuffisants");
 		}
 		if(!(vendeur.possede(propriete))) {
-			//exception
+			throw new alertException("Le vendeur ne possede pas cette propriete");
 		}
-		this.setSolde(this.getSolde()-prix);
-		vendeur.setSolde(vendeur.getSolde()+prix);
+		this.payerJoueur(prix, vendeur);
 		vendeur.enleverProprietes(propriete);
 		this.ajouterProprietes(propriete);
 		propriete.setProprietaire(this);
 	}
-	public void recevoir(int somme)
+	private void recevoir(int somme)
 	{
 		if(somme<0)
 		{throw new IllegalArgumentException();}
 		this.setSolde(this.getSolde()+somme);
 	}
-	public void payer(int somme)
+	private void payer(int somme)
 	{
 		if(somme<0)
 		{throw new IllegalArgumentException();}
 		this.setSolde(this.getSolde()-somme);
 		
+	}
+	
+	public void payerJoueur(int somme, Joueur J) {
+		this.payer(somme);
+		J.recevoir(somme);
 	}
 	@Override
 	public boolean equals(Object obj) {

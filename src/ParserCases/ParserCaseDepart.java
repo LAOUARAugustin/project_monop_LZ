@@ -1,11 +1,12 @@
-package parser;
+package ParserCases;
 
+import parser.Parser;
 import projet_monopoly.Plateau;
 import projet_monopoly.Case.CaseDepart;
 
-public class ParserCaseDepart extends ParserCases {
+public class ParserCaseDepart extends Parser {
 
-	public ParserCaseDepart(ParserCases suivant) {
+	public ParserCaseDepart(Parser suivant) {
 		super(suivant);
 	}
 

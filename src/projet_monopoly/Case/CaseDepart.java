@@ -1,5 +1,8 @@
 package projet_monopoly.Case;
 
+import projet_monopoly.joueur.Joueur;
+import projet_monopoly.joueur.JoueurHumain;
+
 public class CaseDepart extends Cases{
 	private int SommeDepart;
 	public CaseDepart(int numeroCase, String nomCase, int SommeDepart) {
@@ -16,9 +19,7 @@ public class CaseDepart extends Cases{
 		SommeDepart = sommeDepart;
 	}
 	@Override
-	public void arreteSurLaCase() {
-		// TODO Auto-generated method stub
-		
+	public void arretSurLaCase(JoueurHumain J) {		
 	}
 
 }

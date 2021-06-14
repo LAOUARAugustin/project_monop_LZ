@@ -1,5 +1,11 @@
 package projet_monopoly.Case;
 
+import java.io.IOException;
+
+import Exception.alertException;
+import projet_monopoly.joueur.Joueur;
+import projet_monopoly.joueur.JoueurHumain;
+
 public abstract class Cases {
 	protected int numeroCase;
 	protected String nomCase;
@@ -30,7 +36,7 @@ public abstract class Cases {
 	}
 
 	
-	public abstract void arreteSurLaCase();
+	public abstract void arretSurLaCase(JoueurHumain J) throws IOException, alertException;
 	
 	@Override
 	public boolean equals(Object obj) {

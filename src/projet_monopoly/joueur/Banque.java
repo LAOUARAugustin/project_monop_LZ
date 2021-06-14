@@ -2,7 +2,7 @@ package projet_monopoly.joueur;
 
 import projet_monopoly.Plateau;
 
-class Banque extends Joueur {
+public class Banque extends Joueur {
 	private int nbMaisons;
 	private int nbHotel;
 	
