@@ -15,7 +15,13 @@ public class Compagnie extends CasesProprietes {
 		super(numeroCase, nomCase, prixBase);
 		
 	}
-	
+	/**
+	 * Arret sur une case compagnie
+	 * @param J
+	 * Le joueur qui s'arrete
+	 * @param dé
+	 * La valeur du dé pour calculer la somme à payé
+	 */
 	public void arretSurLaCase(JoueurHumain J, int dé) {
 		if(this.isHypotheque()) {
 			return;

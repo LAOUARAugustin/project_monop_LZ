@@ -7,7 +7,13 @@ import projet_monopoly.joueur.JoueurHumain;
 public class CasesCartes extends Cases{
 	public CasesCartes(int numeroCase, String nomCase) {
 		super(numeroCase, nomCase);	}
-
+	
+	
+	/**
+	 * Methode qui fait tiré une carte au joueur si il s'arrete sur une case carte.
+	 * @param J 
+	 * Le joueur qui s'arrete sur la case
+	 */
 	@Override
 	public void arretSurLaCase(JoueurHumain J) throws alertException  {
 		if(this.nomCase.equals("CAISSE COMMUNAUTE")) {

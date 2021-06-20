@@ -60,7 +60,12 @@ public class Gare extends CasesProprietes{
 		this.setLoyer4Gare(loyer4);
 	}
 	
-	
+
+	/**
+	 * Methode qui fait payer un loyer ou bien propose au joueur d'acheter la gare quand il s'arrete dessus.
+	 * @param J 
+	 * Le joueur qui s'arrete sur la case
+	 */
 	@Override
 	public void arretSurLaCase(JoueurHumain J) {
 		if(this.isHypotheque()) {

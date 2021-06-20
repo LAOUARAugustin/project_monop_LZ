@@ -30,7 +30,11 @@ import projet_monopoly.joueur.Banque;
 import projet_monopoly.joueur.Dette;
 import projet_monopoly.joueur.Joueur;
 import projet_monopoly.joueur.JoueurHumain;
-
+/**
+ * Classe représentant le plateau ou se déroule la partie. Contient des fonctions pour la gestion de la partie.
+ * @author LAOUAR Augustin, ZEDDAM Thinhinane
+ *
+ */
 public class Plateau {
 	private ArrayList<Cases> listeCases = new ArrayList<Cases>();
 	private ArrayList<Cartes> listeCartesCommunaute= new ArrayList<Cartes>();
@@ -83,6 +87,12 @@ public class Plateau {
 	{
 		this.listeJoueur.add(j);
 	}
+	
+	/**
+	 * Retire le joueur passé en paramètre de la liste de joueur ( et donc de la partie )
+	 * @param J
+	 * @throws alertException
+	 */
 	public void retirerJoueur(JoueurHumain J) throws alertException
 	{
 		if(!this.listeJoueur.remove(J)) {
@@ -90,7 +100,7 @@ public class Plateau {
 		}
 
 	}
-
+	
 	public void setTourDuJoueur(int t) {
 		if(t<0 || t>3) {
 			throw new IllegalArgumentException("tour joueur");
@@ -102,6 +112,11 @@ public class Plateau {
 		return this.TourDuJoueur;
 	}
 	
+	/**
+	 * Fonction qui gère le changement de tour dans une partie.
+	 * Le joueur suivant est l'élément suivant de la liste de joueur.
+	 * Si on est en queue de liste, on revient à la tête.
+	 */
 	public void changerTour() {
 		int nbJoueur = this.getListeJoueur().size();
 		switch(nbJoueur) {
@@ -139,16 +154,26 @@ public class Plateau {
 	
 	private static Plateau instance = null;
 	
-	
+	/**
+	 * Nous utilisons le sigleton car il n'y aura qu'un seul plateau.
+	 * @return
+	 */
 	public static Plateau getInstance() {
 		if (instance==null)
 			instance = new Plateau();
 		
 		return instance; 
-	}
-	//Methods 
+	} 
 	
-	
+	/**
+	 * Initialise les données du jeu avec des parsers.
+	 * @param fichierChance
+	 * Le fichier des cartes chances.
+	 * @param fichierCommunaute
+	 * Le fichier des cartes caisses de communautés.
+	 * @param fichierTerrain
+	 * Le fichier des terrains.
+	 */
 	public void initFichier(String fichierChance, String fichierCommunaute, String fichierTerrain) {
 		ParserCaseDepart PCD = new ParserCaseDepart(null);
 		ParserCasesPayer PCP = new ParserCasesPayer(null);
@@ -183,33 +208,40 @@ public class Plateau {
 		Fichier.lire(fichierChance,PCaA);
 		Fichier.lire(fichierCommunaute,PCaA);
 	}
-	public void initJoueur(JoueurHumain J1, JoueurHumain J2) {
+	
+	
+	/**
+	 * Initialise les informations et les pions des joueurs.
+	 * Leurs dettes sont toutes initialisés à 0.
+	 * @param soldeJoueur
+	 * Le solde initiale du joueur
+	 * @param soldeBanque
+	 * Le solde initiale de la banque.
+	 */
+	public void initJoueur( int soldeJoueur, int soldeBanque) {
+		Pion pion1 = new Pion("/interface/pion1.png");
+		Pion pion2 = new Pion("/interface/pion2.png");
+		Pion pion3 = new Pion("/interface/pion3.png");
+		Pion pion4 = new Pion("/interface/pion4.png");
 		initBanque();
-		Plateau.getInstance().ajouterJoueur(J1);
-		Plateau.getInstance().ajouterJoueur(J2);
-		initDettes(J1);
-		initDettes(J2);
+		Banque.getInstance().setSolde(soldeBanque);
+		for(JoueurHumain Iterator : Plateau.getInstance().getListeJoueur()) {
+			initDettes(Iterator);
+			Iterator.setSolde(soldeJoueur);
+			Iterator.setPosition(Plateau.getInstance().getListeCases().get(0));
+		}
+		Plateau.getInstance().getListeJoueur().get(0).setPion(pion1);
+		Plateau.getInstance().getListeJoueur().get(1).setPion(pion2);
+		if(Plateau.getInstance().getListeJoueur().size()>2)
+			Plateau.getInstance().getListeJoueur().get(2).setPion(pion3);
+		if(Plateau.getInstance().getListeJoueur().size()>3)
+			Plateau.getInstance().getListeJoueur().get(3).setPion(pion4);
 	}
-	public void initJoueur(JoueurHumain J1, JoueurHumain J2, JoueurHumain J3) {
-		initBanque();
-		Plateau.getInstance().ajouterJoueur(J1);
-		Plateau.getInstance().ajouterJoueur(J2);
-		Plateau.getInstance().ajouterJoueur(J3);
-		initDettes(J1);
-		initDettes(J2);
-		initDettes(J3);
-	}
-	public void initJoueur(JoueurHumain J1, JoueurHumain J2, JoueurHumain J3, JoueurHumain J4 ) {
-		initBanque();
-		Plateau.getInstance().ajouterJoueur(J1);
-		Plateau.getInstance().ajouterJoueur(J2);
-		Plateau.getInstance().ajouterJoueur(J3);
-		Plateau.getInstance().ajouterJoueur(J4);
-		initDettes(J1);
-		initDettes(J2);
-		initDettes(J3);
-		initDettes(J4);
-	}
+	
+	/**
+	 * Initialise toutes les dettes du joueur passé en paramètres.
+	 * @param J
+	 */
 	private void initDettes(JoueurHumain J) {
 		for(JoueurHumain Iterator : this.listeJoueur) {
 			if(!Iterator.equals(J)) {
@@ -219,6 +251,10 @@ public class Plateau {
 			
 		}
 	}
+	
+	/** 
+	 * Initialise la banque et la rend propriétaire de toutes les propriétés en début de partie.
+	 */
 	private void initBanque() {
 		for(Cases Iterator : Plateau.getInstance().getListeCases()) {
 			if(Iterator instanceof CasesProprietes) {
@@ -227,19 +263,4 @@ public class Plateau {
 			}
 		}
 	}
-	/*int Tour = 1;
-	boolean isGagnant = false;
-	while(!isGagnant) {
-		for(Joueur iterator : this.getListeJoueur()) {
-			if(iterator instanceof JoueurHumain) {
-				//JouerTour((JoueurHumain) iterator);
-				}
-			if(this.getListeJoueur().size()<2) {
-				isGagnant = true;
-				String gagnant = this.getListeJoueur().get(0).getNom();
-				System.out.println("Partie terminée, le gagnant est " + gagnant);
-			}
-		}
-		Tour ++;
-	}*/
 }

@@ -5,7 +5,11 @@ import java.io.IOException;
 import Exception.alertException;
 import projet_monopoly.joueur.Joueur;
 import projet_monopoly.joueur.JoueurHumain;
-
+/**
+ * Classe abstraite représentant les cases.
+ * @author LAOUAR Augustin, ZEDDAM Thinhinane
+ *
+ */
 public abstract class Cases {
 	protected int numeroCase;
 	protected String nomCase;
@@ -35,7 +39,12 @@ public abstract class Cases {
 		this.setNumeroCase(numeroCase);
 	}
 
-	
+	/**
+	 * Applique un effet sur le joueur qui s'est arrêté sur la caseS
+	 * @param J
+	 * @throws IOException
+	 * @throws alertException
+	 */
 	public abstract void arretSurLaCase(JoueurHumain J) throws IOException, alertException;
 	
 	@Override

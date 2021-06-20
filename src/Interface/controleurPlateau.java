@@ -25,6 +25,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -43,7 +44,6 @@ import projet_monopoly.joueur.Joueur;
 import projet_monopoly.joueur.JoueurHumain;
 
 public class controleurPlateau {
-	@FXML Button _test;
 	@FXML Button _Jouer;
 	@FXML Button _Proprietes;
 	@FXML Button _Hypotheque;
@@ -56,21 +56,45 @@ public class controleurPlateau {
 	@FXML Label _SJ2;
 	@FXML Label _SJ3;
 	@FXML Label _SJ4;
+	@FXML Label _soldeBanque;
 	@FXML ListView _Historique;
+	@FXML ImageView _Pion;
+	@FXML ImageView _pion1;
+	@FXML ImageView _pion2;
+	@FXML ImageView _pion3;
+	@FXML ImageView _pion4;
+	Image imagePionActuel;
+	Image imagePion1;
+	Image imagePion2;
+	Image imagePion3;
+	Image imagePion4;
 	private static String lastMsg = "";
 	public static String Msg = "";
 	
 
 	@FXML private void initialize() {
-		for(Joueur Iterator : Plateau.getInstance().getListeJoueur()) {
-			if(Iterator instanceof JoueurHumain) {
+		_soldeBanque.setText("Solde de la banque : " + Integer.toString(Banque.getInstance().getSolde()));
+		for(JoueurHumain Iterator : Plateau.getInstance().getListeJoueur()) {
 				JoueurHumain Joueur = (JoueurHumain)Iterator;
 				ImageView image = new ImageView(Joueur.getPion().getImage());
 				image.setFitHeight(40);
 				image.setFitWidth(40);			  
 				_Grid.add(image, Joueur.getPion().getAxeX(), Joueur.getPion().getAxeY());
-			}
 		}
+		imagePion1 = new Image(Plateau.getInstance().getListeJoueur().get(0).getPion().getImage());
+		_pion1.setImage(imagePion1);
+		imagePion2 = new Image(Plateau.getInstance().getListeJoueur().get(1).getPion().getImage());
+		_pion2.setImage(imagePion2);
+		if(Plateau.getInstance().getListeJoueur().size()>2) {
+			imagePion3 = new Image(Plateau.getInstance().getListeJoueur().get(2).getPion().getImage());
+			_pion3.setImage(imagePion3);
+		}
+		if(Plateau.getInstance().getListeJoueur().size()>3) {
+			imagePion4 = new Image(Plateau.getInstance().getListeJoueur().get(3).getPion().getImage());
+			_pion4.setImage(imagePion4);
+		}
+		imagePionActuel = new Image(Plateau.getInstance().getJoueurActuel().getPion().getImage());
+		_Pion.setImage(imagePionActuel);
 		_NomJoueur.setText(Plateau.getInstance().getListeJoueur().get(Plateau.getInstance().getTourDuJoueur()).getNom());
 		_Solde.setText(Integer.toString(Plateau.getInstance().getJoueurActuel().getSolde()));
 		_SJ1.setText(Plateau.getInstance().getListeJoueur().get(0).getNom() + " : " + Integer.toString(Plateau.getInstance().getListeJoueur().get(0).getSolde()));
@@ -83,9 +107,7 @@ public class controleurPlateau {
 		}
 	}
 	
-	public void Test(ActionEvent event) throws IOException {
-		Plateau.getInstance().getJoueurActuel().AllerEnPrison();
-	}
+	
 	public void Jouer(ActionEvent event) throws IOException {
 		JoueurHumain J = (JoueurHumain)Plateau.getInstance().getJoueurActuel();
 		
@@ -93,11 +115,21 @@ public class controleurPlateau {
 	        JouerTour(J);
 		else 
 	       JouerTourPrison(J);
-
+		if(Plateau.getInstance().getJoueurActuel().Faillite()) {
+			ajouterMessageHistorique(Plateau.getInstance().getJoueurActuel().getNom() + " a fait faillite !");
+			if(Plateau.getInstance().getListeJoueur().size() == 1) {
+				boiteAlerte.afficherBoite("Fin de la partie",Plateau.getInstance().getListeJoueur().get(0).getNom() + " a gagné !");
+				Platform.exit();
+			}
+		}
 		Plateau.getInstance().changerTour();
 		ajouterMessageHistorique("C'est au tour de " + Plateau.getInstance().getJoueurActuel().getNom());
 		_NomJoueur.setText(Plateau.getInstance().getListeJoueur().get(Plateau.getInstance().getTourDuJoueur()).getNom());
 		_Solde.setText(Integer.toString(Plateau.getInstance().getListeJoueur().get(Plateau.getInstance().getTourDuJoueur()).getSolde()));
+		imagePionActuel = new Image(Plateau.getInstance().getJoueurActuel().getPion().getImage());
+		_Pion.setImage(imagePionActuel);
+		_soldeBanque.setText("Solde de la banque : " + Integer.toString(Banque.getInstance().getSolde()));
+
 	}
 	
 	
@@ -277,6 +309,7 @@ public class controleurPlateau {
 	}
 	
 	public void Actualise() {
+		_soldeBanque.setText("Solde de la banque : " + Integer.toString(Banque.getInstance().getSolde()));
 		_NomJoueur.setText(Plateau.getInstance().getListeJoueur().get(Plateau.getInstance().getTourDuJoueur()).getNom());
 		_Solde.setText(Integer.toString(Plateau.getInstance().getJoueurActuel().getSolde()));
 		_SJ1.setText(Plateau.getInstance().getListeJoueur().get(0).getNom() + " : " + Integer.toString(Plateau.getInstance().getListeJoueur().get(0).getSolde()));

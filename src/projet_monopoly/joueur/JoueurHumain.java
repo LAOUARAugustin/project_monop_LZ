@@ -17,7 +17,11 @@ import projet_monopoly.Carte.CartesLiberation;
 import projet_monopoly.Case.Cases;
 import projet_monopoly.Case.CasesProprietes;
 import projet_monopoly.Case.Terrain;
-
+/**
+ * Classe représentant un joueur du jeu. 
+ * @author LAOUAR Augustin, ZEDDAM Thinhinane
+ *
+ */
 public class JoueurHumain extends Joueur{
 	private boolean enPrison;
 	private Cases position;
@@ -97,7 +101,7 @@ public class JoueurHumain extends Joueur{
 	
 	
 	public JoueurHumain(String nom, Cases position, Pion pion) {
-		super(nom, 1500);
+		super(nom, 0);
 		Dette detteBanque = new Dette(Banque.getInstance());
 		this.listeDettes.add(detteBanque);
 		this.setEnPrison(false);
@@ -107,7 +111,11 @@ public class JoueurHumain extends Joueur{
 		this.setPion(pion);
 	}
 
-	
+	/**
+	 * Déplace un joueur d'un certain nombre de case depuis sa position initiale.
+	 * Lance une exception si la valeur est inférieur à 2 ou supérieur à 12 ( valeur minimale et maximale possible avec deux dés )
+	 * @param num
+	 */
 	public void seDeplacer(int num)
 	{
 		if(num<2 || num>12) {
@@ -126,6 +134,11 @@ public class JoueurHumain extends Joueur{
 			}
 		}
 	}
+	
+	/**
+	 * Déplace un joueur sur une case dont le nom est passé en paramètre
+	 * @param nom
+	 */
 	public void seDeplacer(String nom)
 	{
 		
@@ -136,6 +149,7 @@ public class JoueurHumain extends Joueur{
 			}
 		}
 	}
+	
 	public void AllerEnPrison()
 	{
 		this.setEnPrison(true);
@@ -154,6 +168,12 @@ public class JoueurHumain extends Joueur{
         int value =  (int) (min+(Math.random()*(max-min +1)));
         return value;
 	}
+	
+	/** 
+	 * Tire une carte aléatoire dans la liste de cartes chances
+	 * @throws alertException
+	 * Exception déstiné à lancer une boite d'alerte
+	 */
 	public void TirerCarteChance() throws alertException
 	{
 		if(Plateau.getInstance().getListeCartesChance().size() == 0) {
@@ -172,6 +192,12 @@ public class JoueurHumain extends Joueur{
 		
         
 	}
+	
+	/** 
+	 * Tire une carte aléatoire dans la liste de cartes caisse de communauté
+	 * @throws alertException
+	 * Exception déstiné à lancer une boite d'alerte
+	 */
 	public void TirerCarteCommunaute() throws alertException
 	{
 		if(Plateau.getInstance().getListeCartesCommunaute().size() == 0) {
@@ -191,6 +217,12 @@ public class JoueurHumain extends Joueur{
         
 	}
 
+	/**
+	 * Vend une carte de libération à un joueur passé en paramètre, à un prix convenue entre les deux joueurs.
+	 * @param J
+	 * @param prix
+	 * @throws alertException
+	 */
 	public void vendreCarteLiberation(JoueurHumain J,int prix) throws alertException {
 		if(this.nbCarteLiberation<1) {
 			throw new alertException("Vous n'avez aucune carte de libération");
@@ -200,6 +232,12 @@ public class JoueurHumain extends Joueur{
 	    this.setNbCarteLiberation(J.getNbCarteLiberation()-1);
 	}
 	
+	/**
+	 * Met une propriété passé en paramètre, que le joueur doit possèdé en hypothèque.
+	 * Elle est supprimé de sa liste de propriétés et est passé dans sa liste d'hypothèques
+	 * @param C
+	 * @throws alertException
+	 */
 	public void mettreHypotheque(CasesProprietes C) throws alertException {
 		if(C instanceof Terrain) {
 			Terrain T = (Terrain)C;
@@ -213,6 +251,12 @@ public class JoueurHumain extends Joueur{
 		Banque.getInstance().payerJoueur((int)(C.getPrixBase()/2), this); 
 	}
 	
+	
+	/**
+	 * Lève l'hypothèque de la propriété passé en parametre. Elle revient donc dans sa liste de propriétés.
+	 * @param C
+	 * @throws alertException
+	 */
 	public void leverHypotheque(CasesProprietes C) throws alertException {
 		if(this.getSolde()<(C.getPrixBase()/2)*1.1) {
 			throw new alertException("Votre solde est insuffisant");
@@ -222,6 +266,13 @@ public class JoueurHumain extends Joueur{
 		this.enleverHypotheque(C);
 		this.payerJoueur(((int)((C.getPrixBase()/2)*1.1)), Banque.getInstance());
 	}
+	/**
+	 * Vend une propriété hypothéqué. Elle sera passé directement dans la liste des propriétés hypothéqués du joueur qui l'a acheté.
+	 * @param C
+	 * @param montant
+	 * @param acheteur
+	 * @throws alertException
+	 */
 	public void vendreHypotheque(CasesProprietes C, int montant, JoueurHumain acheteur) throws alertException {
 		if(acheteur.getSolde()<montant) {
 			throw new alertException("Les fonds de l'acheteur sont insuffisants");
@@ -231,6 +282,10 @@ public class JoueurHumain extends Joueur{
 		acheteur.ajouterHypotheque(C);
 		C.setProprietaire(acheteur);
 	}
+	/**
+	 * Calcul la valeur totale des biens que possède le joueur. La valeur des terrains est la valeur de leurs hypothèque, et la valeur des batiments est celle de leurs prix de revente à la banque.
+	 * @return
+	 */
 	public int fortune() {
 		int valeurHotel = 0 ,valeurMaisons = 0,Solde,ValHypotheque=0;
 		Solde=this.getSolde();
@@ -247,7 +302,13 @@ public class JoueurHumain extends Joueur{
 		}
 		return valeurHotel + valeurMaisons + Solde + ValHypotheque;
 	}
-	public void Faillite() {
+	
+	/**
+	 * Renvoi vrai si le joueur est en faillite, et applique toutes les modalités si le joueurs fait faillite.
+	 * ( Donner toutes ses propriétés au joueur qui l'a mis en faillite, donner son solde etc ... ). 
+	 * @return
+	 */
+	public boolean Faillite() {
 		for(Dette Iterator : this.getDettes()) {
 			if(Iterator.getMontantDette()>this.fortune()) {
 					boiteAlerte.afficherBoite("Faillite", this.getNom() + " a fait faillite ! " + Iterator.getBeneficiere().getNom() + " récupère sa fortune.");	
@@ -304,7 +365,9 @@ public class JoueurHumain extends Joueur{
 				} catch (alertException e) {
 					boiteAlerte.afficherBoite(e);
 				}
+				return true;
 			}
 		}
+		return false;
 	}
 }

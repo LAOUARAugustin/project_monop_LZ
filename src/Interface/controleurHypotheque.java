@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ButtonBar.ButtonData;
@@ -28,9 +29,11 @@ public class controleurHypotheque {
 	@FXML private VBox _Vbox;
 	@FXML private Button _Vendre;
 	@FXML private Button _LeverHypotheque;
+	@FXML private Label _entete;
 	public ListView<HBox> list = new ListView<HBox>();
 	
 	public void initialize() {
+		_entete.setText("Hypothèques de " + Plateau.getInstance().getJoueurActuel());
 		_Vbox.getChildren().add(list);		
 		for(CasesProprietes Iterator : Plateau.getInstance().getJoueurActuel().getHypotheque()) {
 			HBox H = new HBox();
@@ -52,7 +55,9 @@ public class controleurHypotheque {
 	
 	public void Vendre(ActionEvent event) throws IOException {
 			
-			
+		if(list.getItems().size() == 0) {
+			return;
+		}
 			
 			HBox H = list.getSelectionModel().getSelectedItem();
 			Text T = (Text)H.getChildren().get(0);
@@ -147,6 +152,9 @@ public class controleurHypotheque {
 		}
 	
 	public void leverHypotheque(ActionEvent event) {
+		if(list.getItems().size() == 0) {
+			return;
+		}
 		HBox H = list.getSelectionModel().getSelectedItem();
 		Text T = (Text)H.getChildren().get(0);
 		String nom = T.getText();

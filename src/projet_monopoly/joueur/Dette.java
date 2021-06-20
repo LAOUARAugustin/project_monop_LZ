@@ -2,7 +2,11 @@ package projet_monopoly.joueur;
 
 import Exception.alertException;
 import Exception.boiteAlerte;
-
+/**
+ * Classe représentant les dettes qu'un joueur a envers un autre joueur.
+ * @author LAOUAR Augustin, ZEDDAM Thinhinane
+ *
+ */
 public class Dette {
 	private Joueur beneficiere;
 	private int montantDette;
@@ -37,6 +41,11 @@ public class Dette {
 		this.setMontantDette(this.montantDette += montant);
 	}
 	
+	/**
+	 * Rembourse une dette ( totalement ou partiellement ) au joueur
+	 * @param montant
+	 * @throws alertException
+	 */
 	public void payerDette(int montant) throws alertException {
 		if(montant > montantDette) {
 			throw new alertException("Le montant est supérieur à la somme due");

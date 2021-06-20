@@ -151,6 +151,10 @@ public class Terrain extends CasesProprietes {
 	
 	//methodes 
 	
+	/**
+	 * Ajoute une maison sur le terrain.
+	 * Verifie si toutes les conditions sont bien respectés, sinon lance une exceptionS
+	 */
 	public void ajouterMaison() throws alertException {
 		if(Banque.getInstance().getNbMaisons() == 0) {
 			throw new alertException("La banque n'a plus aucune maison à vendre");
@@ -191,6 +195,9 @@ public class Terrain extends CasesProprietes {
 		}
 	}
 	
+	/**
+	 * Verifie si vous avez bien le droit de retirer la maison, puis la retire.
+	 */
 	public void retirerMaison() throws alertException {
 		if(this.getNbMaison()<1) {
 			throw new alertException("Vous n'avez aucune maison");
@@ -214,7 +221,9 @@ public class Terrain extends CasesProprietes {
 			throw new alertException("Vous devez retirer les maisons de maniere uniforme");
 		}
 	}
-	
+	/**
+	 * Verifie si les conditions d'ajout d'un hotel sont respecté, puis l'ajoute.
+	 */
 	public void ajouterHotel() throws alertException {
 		if(Banque.getInstance().getNbHotel() == 0) {
 			throw new alertException("La banque n'a plus aucun hotel à vendre");
@@ -232,6 +241,9 @@ public class Terrain extends CasesProprietes {
 		}
 	}
 	
+	/**
+	 * Verifie si l'on a bien un hotel, puis demande confirmation pour retirer tout les hotels.
+	 */
 	public void retirerHotel() throws alertException {
 		boolean isHotel = false;
 		for(Cases iterator : this.getProprietaire().getProprietes()) {
@@ -262,7 +274,10 @@ public class Terrain extends CasesProprietes {
 				}
 			}
 	}
-	
+	/**
+	 * Echange un hotel contre 4 maisons et le prix d'un hotel divisé par deux. 
+	 * Si la banque n'a plus assez de maisons, lance une exception.
+	 */
 	public void echangerHotel() throws alertException {
 		int nbHotel = 0;
 		for(Cases iterator : this.getProprietaire().getProprietes()) {
@@ -300,7 +315,10 @@ public class Terrain extends CasesProprietes {
 				}
 			}
 	}
-	
+	/**
+	 * Verifie si l'on a tous les terrains du groupe de cette propriété. Renvoi vrai si oui.
+	 * @return
+	 */
 	public boolean toutLesTerrains() {
 		boolean toutLesTerrains = false;
 		int nbTerrain = 0;
@@ -339,6 +357,10 @@ public class Terrain extends CasesProprietes {
 		}
 		return toutLesTerrains;
 	}
+	
+	/**
+	 * Propose d'acheter la propriete si elle n'appartient à aucun joueur, sinon vous payez un loyer au joueur la possedant.
+	 */
 	@Override
 	public void arretSurLaCase(JoueurHumain J)  {
 		if(this.isHypotheque()) {

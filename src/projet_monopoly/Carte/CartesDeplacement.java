@@ -16,6 +16,10 @@ public class CartesDeplacement extends Cartes {
 	private boolean passerCaseDepart;
 	private int nbCases; // ou bien nb de cases à faire
 
+	
+	/**
+	 * Deplacement d'un nombre de case ou bien sur le nom d'une case en fonction de la carte tiré.
+	 */
 	@Override
 	public void effet(JoueurHumain Joueur) {
 		if(nbCases == 0) { // cas ou on se deplace sur une case 

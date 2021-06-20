@@ -2,7 +2,11 @@ package Exception;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-
+/**
+ * Classe servant à afficher une boite d'alerte rapidement ( avec une seule ligne de code ).
+ * @author LAOUAR Augustin, ZEDDAM Thinhinane
+ *
+ */
 
 public class boiteAlerte {
 	private String Header;

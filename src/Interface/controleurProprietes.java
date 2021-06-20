@@ -37,6 +37,7 @@ import projet_monopoly.joueur.JoueurHumain;
 public class controleurProprietes{
 	@FXML private Label _entete;
 	@FXML private Label _NbCartes;
+	@FXML private Label _fortune;
 	@FXML private VBox _Vbox;
 	@FXML private Button _Vendre;
 	@FXML private Button _AddMaison;
@@ -51,6 +52,7 @@ public class controleurProprietes{
 	
 	
 	public void initialize() {
+		_fortune.setText("Votre capital total :" + Plateau.getInstance().getJoueurActuel().fortune() + " euros");
 		_entete.setText("Proprietés de " + Plateau.getInstance().getJoueurActuel().getNom());
 		_NbCartes.setText(Integer.toString(Plateau.getInstance().getJoueurActuel().getNbCarteLiberation()));
 		_Vbox.getChildren().add(list);		
@@ -85,9 +87,9 @@ public class controleurProprietes{
 	}
 	
 	public void Vendre(ActionEvent event) throws IOException {
-		
-		
-		
+		if(list.getItems().size() == 0) {
+			return;
+		}
 		HBox H = list.getSelectionModel().getSelectedItem();
 		Text T = (Text)H.getChildren().get(0);
 		String nom = T.getText();
@@ -182,6 +184,9 @@ public class controleurProprietes{
 	
 	
 	public void AddMaison(ActionEvent event) {
+		if(list.getItems().size() == 0) {
+			return;
+		}
 		HBox H = list.getSelectionModel().getSelectedItem();
 			Text T = (Text)H.getChildren().get(0);
 			String nom = T.getText();
@@ -200,6 +205,9 @@ public class controleurProprietes{
 			refresh();
 	}
 	public void AddHotel(ActionEvent event)  {
+		if(list.getItems().size() == 0) {
+			return;
+		}
 		HBox H = list.getSelectionModel().getSelectedItem();
 		Text T = (Text)H.getChildren().get(0);
 		String nom = T.getText();
@@ -219,6 +227,9 @@ public class controleurProprietes{
 	
 	public void RemoveHotel(ActionEvent event)
 	{
+		if(list.getItems().size() == 0) {
+			return;
+		}
 		HBox H = list.getSelectionModel().getSelectedItem();
 		Text T = (Text)H.getChildren().get(0);
 		String nom = T.getText();
@@ -237,6 +248,9 @@ public class controleurProprietes{
 	}
 	public void RemoveMaison(ActionEvent event)
 	{
+		if(list.getItems().size() == 0) {
+			return;
+		}
 		HBox H = list.getSelectionModel().getSelectedItem();
 		Text T = (Text)H.getChildren().get(0);
 		String nom = T.getText();
@@ -254,6 +268,9 @@ public class controleurProprietes{
 		refresh();
 	}	
 	public void Echanger(ActionEvent event) {
+		if(list.getItems().size() == 0) {
+			return;
+		}
 		HBox H = list.getSelectionModel().getSelectedItem();
 		Text T = (Text)H.getChildren().get(0);
 		String nom = T.getText();
@@ -374,6 +391,7 @@ public class controleurProprietes{
 	
 	
 	public void refresh() {
+		_fortune.setText("Votre capital total :" + Plateau.getInstance().getJoueurActuel().fortune() + " euros");
 		_NbCartes.setText(Integer.toString(Plateau.getInstance().getJoueurActuel().getNbCarteLiberation()));
 		list.getItems().clear();
 		for(CasesProprietes Iterator : Plateau.getInstance().getJoueurActuel().getProprietes()) {

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="590.0" prefWidth="796.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Interface.controleurVueIntro">
+   <children>
+      <Button fx:id="jouer" layoutX="322.0" layoutY="483.0" mnemonicParsing="false" onAction="#Jouer" prefHeight="49.0" prefWidth="153.0" text="JOUER" />
+      <Button fx:id="_ajouterJoueur" layoutX="463.0" layoutY="194.0" mnemonicParsing="false" onAction="#ajouterJoueur" prefHeight="31.0" prefWidth="152.0" text="Ajouter un joueur" />
+      <TextField fx:id="_soldeJ" layoutX="449.0" layoutY="370.0" prefHeight="31.0" prefWidth="108.0" />
+      <TextField fx:id="_soldeB" layoutX="449.0" layoutY="417.0" prefHeight="31.0" prefWidth="108.0" />
+      <VBox fx:id="_Vbox" layoutX="89.0" layoutY="137.0" prefHeight="200.0" prefWidth="328.0" />
+      <Button fx:id="_SupprimerJoueur" layoutX="465.0" layoutY="264.0" mnemonicParsing="false" onAction="#SupprimerJoueur" text="Supprimer le joueur" />
+      <Text layoutX="53.0" layoutY="391.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Solde de base pour les joueurs ( au moins 200 euros ) :" />
+      <Text layoutX="53.0" layoutY="438.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Solde de base pour la banque ( au moins 1000 euros ) :" />
+      <Text fill="#e53a2c" layoutX="202.0" layoutY="80.0" strokeType="OUTSIDE" strokeWidth="0.0" text="MONOPOLY" wrappingWidth="429.3681640625">
+         <font>
+            <Font name="Britannic Bold" size="79.0" />
+         </font>
+      </Text>
+      <Button fx:id="_test" layoutX="719.0" layoutY="545.0" mnemonicParsing="false" onAction="#Test" prefHeight="31.0" prefWidth="53.0" text="mode test">
+         <font>
+            <Font size="9.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>
