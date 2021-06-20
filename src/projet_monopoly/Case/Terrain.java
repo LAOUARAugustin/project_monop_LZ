@@ -152,6 +152,9 @@ public class Terrain extends CasesProprietes {
 	//methodes 
 	
 	public void ajouterMaison() throws alertException {
+		if(Banque.getInstance().getNbMaisons() == 0) {
+			throw new alertException("La banque n'a plus aucune maison à vendre");
+		}
 		if(this.getNbMaison()>3) {
 			throw new alertException("Impossible d'ajouter plus de 4 maisons");
 		}
@@ -175,6 +178,7 @@ public class Terrain extends CasesProprietes {
 					if(droitDeConstruire) {
 						this.setNbMaison(this.getNbMaison()+1);
 						this.getProprietaire().payerJoueur(PrixAchatMaison,Banque.getInstance());
+						Banque.getInstance().setNbMaisons(Banque.getInstance().getNbMaisons()-1);
 					}
 					else {
 						throw new alertException("Impossible d'ajouter la maison, vous n'avez pas assez de maisons sur les autres terrains du groupe");
@@ -203,6 +207,8 @@ public class Terrain extends CasesProprietes {
 		if(droitDeRetrait) {
 			this.setNbMaison(this.getNbMaison()-1);
 			Banque.getInstance().payerJoueur(this.PrixAchatMaison/2, this.getProprietaire());
+			Banque.getInstance().setNbMaisons(Banque.getInstance().getNbMaisons()+1);
+
 		}
 		else {
 			throw new alertException("Vous devez retirer les maisons de maniere uniforme");
@@ -210,10 +216,16 @@ public class Terrain extends CasesProprietes {
 	}
 	
 	public void ajouterHotel() throws alertException {
+		if(Banque.getInstance().getNbHotel() == 0) {
+			throw new alertException("La banque n'a plus aucun hotel à vendre");
+		}
 		if(this.getNbMaison()== 4) {
 			this.setHotel(true);
 			this.setNbMaison(0);
+			Banque.getInstance().setNbMaisons(Banque.getInstance().getNbMaisons()+4);
 			this.getProprietaire().payerJoueur(PrixAchatMaison, Banque.getInstance());
+			Banque.getInstance().setNbHotel(Banque.getInstance().getNbHotel()-1);
+
 		}
 		else {
 			throw new alertException("Vous n'avez pas assez de maisons");
@@ -242,12 +254,53 @@ public class Terrain extends CasesProprietes {
 				if(iterator instanceof Terrain) {
 					if(((Terrain) iterator).getGroupe().equals(this.groupe)) {	
 								((Terrain)iterator).setHotel(false);
-								Banque.getInstance().payerJoueur((this.PrixAchatMaison * 5)/2, this.getProprietaire());						
+								Banque.getInstance().payerJoueur((this.PrixAchatMaison * 5)/2, this.getProprietaire());		
+								Banque.getInstance().setNbHotel(Banque.getInstance().getNbHotel()+1);
+
 						}
 					}
 				}
 			}
 	}
+	
+	public void echangerHotel() throws alertException {
+		int nbHotel = 0;
+		for(Cases iterator : this.getProprietaire().getProprietes()) {
+			if(iterator instanceof Terrain) {
+				if(((Terrain) iterator).getGroupe().equals(this.groupe)) {
+					if(this.isHotel() == true) {
+						nbHotel ++;
+						}
+					}
+				}
+			}
+		if(nbHotel == 0) {
+			throw new alertException("Vous n'avez aucun hotel");	
+		}
+		if(Banque.getInstance().getNbMaisons()<nbHotel*4) {
+			throw new alertException("La banque n'a plus assez de maisons pour effectuer cette opération.");
+		}
+		Alert alert = new Alert(AlertType.CONFIRMATION, "Tout les hotels du groupe seront retirer et echanger contre des maisons ainsi que la moitié de la valeur d'un hotel, voulez vous continuer ?", ButtonType.YES, ButtonType.NO);
+		alert.showAndWait();
+
+		if (alert.getResult() == ButtonType.YES) {
+			for(Cases iterator : this.getProprietaire().getProprietes()) {
+				if(iterator instanceof Terrain) {
+					if(((Terrain) iterator).getGroupe().equals(this.groupe)) {	
+								((Terrain)iterator).setHotel(false);
+								((Terrain)iterator).setNbMaison(4);
+								Banque.getInstance().payerJoueur((this.PrixAchatMaison)/2, this.getProprietaire());		
+								Banque.getInstance().setNbHotel(Banque.getInstance().getNbHotel()+1);
+								Banque.getInstance().setNbMaisons(Banque.getInstance().getNbMaisons()-4);
+
+								
+
+						}
+					}
+				}
+			}
+	}
+	
 	public boolean toutLesTerrains() {
 		boolean toutLesTerrains = false;
 		int nbTerrain = 0;
@@ -288,17 +341,19 @@ public class Terrain extends CasesProprietes {
 	}
 	@Override
 	public void arretSurLaCase(JoueurHumain J)  {
+		if(this.isHypotheque()) {
+			return;
+		}
 		if(this.getProprietaire() == Banque.getInstance()) {
-			Alert alert = new Alert(AlertType.CONFIRMATION, "La propriété " + this.getNomCase() + " (" + this.getGroupe() + ") n'appartient à aucun joueur, voulez vous l'acheter ?", ButtonType.YES, ButtonType.NO);
+			Alert alert = new Alert(AlertType.CONFIRMATION, "La propriété " + this.getNomCase() + " (" + this.getGroupe() + ") (" + this.getPrixBase() + " euros) " + " n'appartient à aucun joueur, voulez vous l'acheter ?", ButtonType.YES, ButtonType.NO);
 			alert.showAndWait();
 
 			if (alert.getResult() == ButtonType.YES) {
 				try {
 					J.acheter(this, this.getProprietaire(), this.getPrixBase());
-					controleurPlateau.passerMessage(this.getProprietaire().getNom() + " a acheté " + this.getNomCase() + " (" + this.getGroupe() + ")");
+					controleurPlateau.passerMessage(this.getProprietaire().getNom() + " a acheté " + this.getNomCase() + " (" + this.getGroupe() + ") " + " (" + this.getPrixBase() + " euros)");
 				} catch (alertException e) {
-					boiteAlerte A = new boiteAlerte("Achat impossible",e.getMsg());
-					A.show();
+					boiteAlerte.afficherBoite(e);
 				}
 			}
 		}

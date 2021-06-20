@@ -9,6 +9,7 @@ import Exception.alertException;
 import Exception.boiteAlerte;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -20,18 +21,24 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.util.Callback;
 import projet_monopoly.Plateau;
 import projet_monopoly.Carte.CartesAnniversaire;
 import projet_monopoly.Case.Cases;
+import projet_monopoly.Case.CasesProprietes;
 import projet_monopoly.Case.Compagnie;
 import projet_monopoly.joueur.Banque;
+import projet_monopoly.joueur.Dette;
 import projet_monopoly.joueur.Joueur;
 import projet_monopoly.joueur.JoueurHumain;
 
@@ -39,6 +46,8 @@ public class controleurPlateau {
 	@FXML Button _test;
 	@FXML Button _Jouer;
 	@FXML Button _Proprietes;
+	@FXML Button _Hypotheque;
+	@FXML Button _AfficherDettes;
 	@FXML Button _Quitter;
 	@FXML Label _NomJoueur;
 	@FXML Label _Solde;
@@ -48,8 +57,8 @@ public class controleurPlateau {
 	@FXML Label _SJ3;
 	@FXML Label _SJ4;
 	@FXML ListView _Historique;
-	private static String lastMsg;
-	private static String Msg;
+	private static String lastMsg = "";
+	public static String Msg = "";
 	
 
 	@FXML private void initialize() {
@@ -75,16 +84,7 @@ public class controleurPlateau {
 	}
 	
 	public void Test(ActionEvent event) throws IOException {
-		try {
-			Plateau.getInstance().getJoueurActuel().TirerCarteChance();
-			System.out.println(Plateau.getInstance().getListeCartesChance().size());
-		} catch (alertException e) {
-			boiteAlerte A = new boiteAlerte("",e.getMsg());
-			A.show();
-		}
-		System.out.println(Plateau.getInstance().getJoueurActuel().getPosition().getNumeroCase());
-		Plateau.getInstance().getJoueurActuel().getPion().deplacerPion(Plateau.getInstance().getJoueurActuel().getPosition());
-		Actualise();
+		Plateau.getInstance().getJoueurActuel().AllerEnPrison();
 	}
 	public void Jouer(ActionEvent event) throws IOException {
 		JoueurHumain J = (JoueurHumain)Plateau.getInstance().getJoueurActuel();
@@ -99,6 +99,8 @@ public class controleurPlateau {
 		_NomJoueur.setText(Plateau.getInstance().getListeJoueur().get(Plateau.getInstance().getTourDuJoueur()).getNom());
 		_Solde.setText(Integer.toString(Plateau.getInstance().getListeJoueur().get(Plateau.getInstance().getTourDuJoueur()).getSolde()));
 	}
+	
+	
 	public void Proprietes(ActionEvent event) throws IOException {
 		Dialog<String> dialog = new Dialog<>();
 		
@@ -112,11 +114,148 @@ public class controleurPlateau {
 		dialog.getDialogPane().setContent(grille);
 		dialog.setTitle("propriete");
 		dialog.showAndWait();
-		_Solde.setText(Integer.toString(Plateau.getInstance().getListeJoueur().get(Plateau.getInstance().getTourDuJoueur()).getSolde()));
-		
+		Actualise();
 		
 			
 	}
+	
+	public void Hypotheque(ActionEvent e) throws IOException {
+		Dialog<String> dialog = new Dialog<>();
+		
+		
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("vueHypotheque.fxml"));
+		
+		AnchorPane grille = loader.load();
+		ButtonType buttonTypeOkAnnuler = new ButtonType("Fermer", ButtonData.CANCEL_CLOSE);
+		dialog.getDialogPane().getButtonTypes().add(buttonTypeOkAnnuler);
+
+		dialog.getDialogPane().setContent(grille);
+		dialog.setTitle("Hypotheques");
+		dialog.showAndWait();
+		Actualise();
+	}
+	
+	public void afficherDettes(ActionEvent event) {
+		
+		Dialog<String> dialog = new Dialog<>();
+		
+		AnchorPane Anchor = new AnchorPane();
+		HBox hbox = new HBox();
+		VBox V = new VBox();
+		ListView<HBox> list=new ListView<HBox>();
+		V.getChildren().add(list);
+		hbox.getChildren().add(V);
+		for(Dette Iterator : Plateau.getInstance().getJoueurActuel().getDettes()) 
+		{
+			HBox H1 = new HBox();
+			Text nom = new Text(Iterator.getBeneficiere().getNom());
+			Text montant = new Text(Integer.toString(Iterator.getMontantDette()));
+			H1.getChildren().addAll(nom,montant);
+			H1.setSpacing(20);
+			list.getItems().add(H1);
+				
+	
+		}
+		list.getSelectionModel().select(0);
+		Button Rembourser = new Button();
+		Rembourser.setText("Rembourser");
+		TextField montant = new TextField();
+		montant.setText("Entrez un montant");
+		Rembourser.setOnAction(new EventHandler<ActionEvent>() {
+		
+		    @Override
+		    public void handle(ActionEvent event) {
+		    	HBox H = list.getSelectionModel().getSelectedItem();
+				Text T = (Text)H.getChildren().get(0);
+				String joueurSelect = T.getText();
+				if(joueurSelect.equals(Banque.getInstance().getNom())) {
+					if(montant.getText().trim().matches("[+-]?\\d*(\\.\\d+)?") && !montant.getText().trim().isEmpty()) {
+						int p = Integer.parseInt(montant.getText().trim());
+						if(p>0) {
+							try {
+								Plateau.getInstance().getJoueurActuel().rembourser(p, Banque.getInstance());
+								boiteAlerte.afficherBoite("Opération réussie", "La somme à bien été versé à la banque");
+								Actualise();
+								for(Dette D : Plateau.getInstance().getJoueurActuel().getDettes()) {
+									if(D.getBeneficiere().equals(Banque.getInstance())){
+										((Text)H.getChildren().get(1)).setText(Integer.toString(D.getMontantDette()));
+
+									}
+								}
+								
+							} 
+							catch (alertException e) {
+								boiteAlerte.afficherBoite(e);
+							}						
+							
+						}
+						else {
+							boiteAlerte.afficherBoite("Remboursement impossible","Le montant doit être superieur à 0");
+							return ;
+						}	
+					
+				}
+				else {
+					boiteAlerte.afficherBoite("Remboursement impossible","Entrez un montant valide");
+					return ;
+				}
+				}
+				for(JoueurHumain Iterator : Plateau.getInstance().getListeJoueur())
+				{
+						
+						if(Iterator.getNom().equals(joueurSelect))
+						{
+									if(montant.getText().trim().matches("[+-]?\\d*(\\.\\d+)?") && !montant.getText().trim().isEmpty()) {
+										int p = Integer.parseInt(montant.getText().trim());
+										if(p>0) {
+											try {
+												Plateau.getInstance().getJoueurActuel().rembourser(p, Iterator);
+												boiteAlerte.afficherBoite("Opération réussie", "La somme à bien été versé à " + Iterator.getNom());
+												Actualise();
+												for(Dette D : Plateau.getInstance().getJoueurActuel().getDettes()) {
+													if(D.getBeneficiere().equals(Iterator)){
+														((Text)H.getChildren().get(1)).setText(Integer.toString(D.getMontantDette()));
+
+													}		
+												}
+											}
+											catch (alertException e) {
+												boiteAlerte.afficherBoite(e);
+											}						
+											
+										}
+										else {
+											boiteAlerte.afficherBoite("Remboursement impossible","Le montant doit être superieur à 0");
+											return ;
+										}	
+									
+								}
+								else {
+									boiteAlerte.afficherBoite("Remboursement impossible","Entrez un montant valide");
+									return ;
+								}
+							
+							
+						}
+					}
+				
+				
+
+		    }
+		  
+		});
+		hbox.getChildren().addAll(Rembourser,montant);
+		Anchor.getChildren().add(hbox);
+		ButtonType buttonTypeOkAnnuler = new ButtonType("Annuler", ButtonData.CANCEL_CLOSE);
+		dialog.getDialogPane().getButtonTypes().add(buttonTypeOkAnnuler);
+		dialog.getDialogPane().setContent(Anchor);
+		dialog.setTitle("Dettes");
+		dialog.show();		
+		
+		
+		
+	}
+	
 	public void Quitter(ActionEvent event) {
 		Platform.exit();
 	}
@@ -168,8 +307,7 @@ public class controleurPlateau {
 	public void JouerTour(JoueurHumain J) throws IOException {
 		int Dé1 = J.LancerDé();
         int Dé2 = J.LancerDé();
-        boiteAlerte A = new boiteAlerte("Vous avez lancé les dés","Les dés ont fait " +Dé1 +" et " + Dé2 + ".");
-        A.show();
+        boiteAlerte.afficherBoite("Vous avez lancé les dés","Les dés ont fait " +Dé1 +" et " + Dé2 + ".");
         int somme = Dé1 + Dé2;
         ajouterMessageHistorique(Plateau.getInstance().getJoueurActuel().getNom() + " a fait " + Dé1 + " et " + Dé2);
         J.seDeplacer(somme);
@@ -188,23 +326,19 @@ public class controleurPlateau {
 			        ajouterMessageHistorique();
 			        Actualise();		
 				} catch (alertException e) {
-					boiteAlerte X = new boiteAlerte("Action impossible", e.getMsg());
-					X.show();
-					
+					boiteAlerte.afficherBoite(e);
 		    }
 		}
         if(Dé1 == Dé2) { // double
       	  	  ajouterMessageHistorique("DOUBLE !!");
         	  Dé1 = J.LancerDé();
               Dé2 = J.LancerDé();
-              boiteAlerte B = new boiteAlerte("Vous avez lancé les dés","Les dés ont fait " +Dé1 +" et " + Dé2 + ".");
-  	          B.show();
+              boiteAlerte.afficherBoite("Vous avez lancé les dés","Les dés ont fait " +Dé1 +" et " + Dé2 + ".");
               somme =Dé1+Dé2;
               ajouterMessageHistorique(Plateau.getInstance().getJoueurActuel().getNom() + " a fait " + Dé1 + " et " + Dé2);
               if(Dé1 == Dé2) { // 2 doubles
             	  	ajouterMessageHistorique("DOUBLE !!");
-	                boiteAlerte C = new boiteAlerte("Pas de chance !","Vous avez fait 3 doubles, vous allez donc en prison");
-	      	        C.show();
+	                boiteAlerte.afficherBoite("Pas de chance !","Vous avez fait 3 doubles, vous allez donc en prison");
 	      	        J.AllerEnPrison();
 	      	        J.getPion().deplacerPion(J.getPosition());
 	      	        Actualise();
@@ -227,8 +361,7 @@ public class controleurPlateau {
 					        ajouterMessageHistorique();
 					        Actualise();		
 						} catch (alertException e) {
-							boiteAlerte Y = new boiteAlerte("Action impossible", e.getMsg());
-							Y.show();
+							boiteAlerte.afficherBoite(e);
 						}		
 		  		    } 
 	             }
@@ -239,13 +372,12 @@ public class controleurPlateau {
 	}
 
 	public void JouerTourPrison(JoueurHumain J) {
+			ajouterMessageHistorique(J.getNom() + " est en prison. (" + J.getTempsEnPrison() + " tour(s) restant)");
 		 	int Dé1 = J.LancerDé();
 	        int Dé2 = J.LancerDé();
-	        boiteAlerte A = new boiteAlerte("Vous avez lancé les dés","Les dés ont fait " +Dé1 +" et " + Dé2 + ".");
-	        A.show();
+	        boiteAlerte.afficherBoite("Vous avez lancé les dés","Les dés ont fait " +Dé1 +" et " + Dé2 + ".");
 	        if(Dé1 == Dé2) {
-	        	boiteAlerte B = new boiteAlerte("Coup de chance !","Les dés ont fait un double, vous sortez donc de prison.");
-		        B.show();
+	        	boiteAlerte.afficherBoite("Coup de chance !","Les dés ont fait un double, vous sortez donc de prison.");
 	        	J.SortirDePrison();
 	        	ajouterMessageHistorique(Plateau.getInstance().getJoueurActuel().getNom() + " est libérable.");
 	        	J.seDeplacer(Dé1+Dé2);
@@ -279,6 +411,10 @@ public class controleurPlateau {
 				    			}
 		        }
 			}
+	        J.setTempsEnPrison(J.getTempsEnPrison()-1);
+	        if(J.getTempsEnPrison() == 0) {
+	        	J.SortirDePrison();
+	        }
 	}
 	
 	

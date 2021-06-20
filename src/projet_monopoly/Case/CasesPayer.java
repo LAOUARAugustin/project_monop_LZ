@@ -1,5 +1,6 @@
 package projet_monopoly.Case;
 
+import Interface.controleurPlateau;
 import projet_monopoly.joueur.Banque;
 import projet_monopoly.joueur.JoueurHumain;
 
@@ -25,6 +26,7 @@ public class CasesPayer extends Cases {
 	@Override
 	public void arretSurLaCase(JoueurHumain J) {
 			J.payerJoueur(montant,Banque.getInstance());
+			controleurPlateau.passerMessage(J.getNom()+" a payé des taxes à hauteur de "+ montant + " euros");
 		
 	}
 

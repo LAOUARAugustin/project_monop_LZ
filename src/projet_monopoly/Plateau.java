@@ -27,6 +27,7 @@ import projet_monopoly.Case.Cases;
 import projet_monopoly.Case.CasesProprietes;
 import projet_monopoly.Case.Gare;
 import projet_monopoly.joueur.Banque;
+import projet_monopoly.joueur.Dette;
 import projet_monopoly.joueur.Joueur;
 import projet_monopoly.joueur.JoueurHumain;
 
@@ -52,8 +53,8 @@ public class Plateau {
 		ArrayList<Cartes> listeClone = new ArrayList<Cartes>(this.listeCartesChance);
 		return listeClone;
 	}
-	public ArrayList<Joueur> getListeJoueur() {
-		ArrayList<Joueur> listeClone = new ArrayList<Joueur>(this.listeJoueur);
+	public ArrayList<JoueurHumain> getListeJoueur() {
+		ArrayList<JoueurHumain> listeClone = new ArrayList<JoueurHumain>(this.listeJoueur);
 		return listeClone;
 	}
 	public void ajouterCase(Cases c)
@@ -133,6 +134,7 @@ public class Plateau {
 	}
 	
 	private Plateau() {
+		this.TourDuJoueur = 0;
 	}
 	
 	private static Plateau instance = null;
@@ -182,22 +184,40 @@ public class Plateau {
 		Fichier.lire(fichierCommunaute,PCaA);
 	}
 	public void initJoueur(JoueurHumain J1, JoueurHumain J2) {
+		initBanque();
 		Plateau.getInstance().ajouterJoueur(J1);
 		Plateau.getInstance().ajouterJoueur(J2);
-		initBanque();
+		initDettes(J1);
+		initDettes(J2);
 	}
 	public void initJoueur(JoueurHumain J1, JoueurHumain J2, JoueurHumain J3) {
+		initBanque();
 		Plateau.getInstance().ajouterJoueur(J1);
 		Plateau.getInstance().ajouterJoueur(J2);
 		Plateau.getInstance().ajouterJoueur(J3);
-		initBanque();
+		initDettes(J1);
+		initDettes(J2);
+		initDettes(J3);
 	}
 	public void initJoueur(JoueurHumain J1, JoueurHumain J2, JoueurHumain J3, JoueurHumain J4 ) {
+		initBanque();
 		Plateau.getInstance().ajouterJoueur(J1);
 		Plateau.getInstance().ajouterJoueur(J2);
 		Plateau.getInstance().ajouterJoueur(J3);
 		Plateau.getInstance().ajouterJoueur(J4);
-		initBanque();
+		initDettes(J1);
+		initDettes(J2);
+		initDettes(J3);
+		initDettes(J4);
+	}
+	private void initDettes(JoueurHumain J) {
+		for(JoueurHumain Iterator : this.listeJoueur) {
+			if(!Iterator.equals(J)) {
+				Dette D = new Dette(Iterator);
+				J.ajouterDette(D);
+			}
+			
+		}
 	}
 	private void initBanque() {
 		for(Cases Iterator : Plateau.getInstance().getListeCases()) {

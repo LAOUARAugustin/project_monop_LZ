@@ -1,16 +1,16 @@
-CHANCE;DEPLACEMENT;Rendez-vous Ã  la Rue de la Paix;OUI;NOM;RUE DE LA PAIX 
-CHANCE;PAYER;Payez pour frais de scolaritÃ©;150
-CHANCE;DEPLACEMENT;Rendez-vous Ã  l'Avenue Henri-Martin. Si vous passez par la case DÃ©part, recevez 200â‚¬;OUI;NOM;AVENUE HENRI-MARTIN
-CHANCE;DEPLACEMENT;Avancez au Boulevard de la Vilette. Si vous passez par la case DÃ©part, recevez 200â‚¬;OUI;NOM;BOULEVARD DE LA VILLETTE
-CHANCE;ENCAISSER;Votre immeuble et votre prÃªt rapportent. Vous devez toucher 150â‚¬;150
+CHANCE;DEPLACEMENT;Rendez-vous à la Rue de la Paix;OUI;NOM;RUE DE LA PAIX
+CHANCE;PAYER;Payez pour frais de scolarité ;150
+CHANCE;DEPLACEMENT;Rendez-vous à l'Avenue Henri-Martin. Si vous passez par la case Départ, recevez 200 euros;OUI;NOM;AVENUE HENRI-MARTIN
+CHANCE;DEPLACEMENT;Avancez au Boulevard de la Vilette. Si vous passez par la case Départ, recevez 200 euros;OUI;NOM;BOULEVARD DE LA VILLETTE
+CHANCE;ENCAISSER;Votre immeuble et votre pret rapportent. Vous devez toucher 150 euros;150
 CHANCE;DEPLACEMENT;Reculer de trois cases;NON;NUMERO;-3
-CHANCE;PAYER;Amende pour excÃ¨s de vitesse : 15â‚¬;15
-CHANCE;LIBERATION;Vous Ãªtes libÃ©rÃ© de prison. Cette carte peut Ãªtre conservÃ©e jusqu'Ã  ce qu'elle soit utilisÃ©e ou vendue.
-CHANCE;DEPLACEMENT;Allez en prison ! Avancez tout droit en prison. Ne passez pas par la case dÃ©part. Ne recevez pas 200â‚¬;NON;NOM;PRISON
-CHANCE;ENCAISSER;Vous avez gagnÃ© le prix de mots croisÃ©s. Recevez 100â‚¬.;100
-CHANCE;IMPOTS;Vous Ãªtes imposÃ© pour les rÃ©parations de voirie Ã  raison de : 40â‚¬ par maison et 115â‚¬ par hotel.;40;115
-CHANCE;REPARATIONS;Faites des rÃ©parations dans toutes vos maisons. Versez pour chaque maison 25â‚¬. Versez pour chaque hÃ´tel 100â‚¬;25;100
-CHANCE;PAYER;Amende pour ivresse : 20â‚¬;20
-CHANCE;ENCAISSER;La bouque vous verse un dividende de 50â‚¬;50
-CHANCE;DEPLACEMENT;Avancez jusqu'Ã  la case dÃ©part;OUI;NOM;CASE DEPART
-CHANCE;DEPLACEMENT;Allez Ã  la gare de Lyon. Si vous passez par la case DÃ©part, recevez 200â‚¬;OUI;NOM;GARE DE LYON
+CHANCE;PAYER;Amende pour excès de vitesse : 15 euros;15
+CHANCE;LIBERATION;Vous etes libéré de prison. Cette carte peut etre conservée jusqu'à ce qu'elle soit utilisée ou vendue.
+CHANCE;DEPLACEMENT;Allez en prison ! Avancez tout droit en prison. Ne passez pas par la case départ. Ne recevez pas 200 euros;NON;NOM;PRISON
+CHANCE;ENCAISSER;Vous avez gagné le prix de mots croisées. Recevez 100 euros;100
+CHANCE;IMPOTS;Vous etes imposé pour les réparations de voirie à  raison de : 40 euros par maison et 115 euros par hotel.;40;115
+CHANCE;REPARATIONS;Faites des réparations dans toutes vos maisons. Versez pour chaque maison 25 euros. Versez pour chaque hotel 100 euros;25;100
+CHANCE;PAYER;Amende pour ivresse : 20 euros;20
+CHANCE;ENCAISSER;La bouque vous verse un dividende de 50 euros;50
+CHANCE;DEPLACEMENT;Avancez jusqu'à  la case départ;OUI;NOM;CASE DEPART
+CHANCE;DEPLACEMENT;Allez à la gare de Lyon. Si vous passez par la case Départ, recevez 200 euros ;OUI;NOM;GARE DE LYON

@@ -36,10 +36,14 @@ import projet_monopoly.joueur.JoueurHumain;
 
 public class controleurProprietes{
 	@FXML private Label _entete;
+	@FXML private Label _NbCartes;
 	@FXML private VBox _Vbox;
 	@FXML private Button _Vendre;
 	@FXML private Button _AddMaison;
 	@FXML private Button _AddHotel;
+	@FXML private Button _Echanger;
+	@FXML private Button _vendreLibe;
+	@FXML private Button _hypotheque;
 	public ListView<HBox> list = new ListView<HBox>();
 	
 	
@@ -48,6 +52,7 @@ public class controleurProprietes{
 	
 	public void initialize() {
 		_entete.setText("Proprietés de " + Plateau.getInstance().getJoueurActuel().getNom());
+		_NbCartes.setText(Integer.toString(Plateau.getInstance().getJoueurActuel().getNbCarteLiberation()));
 		_Vbox.getChildren().add(list);		
 		for(CasesProprietes Iterator : Plateau.getInstance().getJoueurActuel().getProprietes()) {
 			HBox H = new HBox();
@@ -96,24 +101,16 @@ public class controleurProprietes{
 		ListView<HBox> list=new ListView<HBox>();
 		V.getChildren().add(list);
 		hbox.getChildren().add(V);
-		for(Joueur Iterator : Plateau.getInstance().getListeJoueur()) 
+		for(JoueurHumain Iterator : Plateau.getInstance().getListeJoueur()) 
 		{
-			if(Iterator instanceof JoueurHumain)
-			{
-				JoueurHumain j = (JoueurHumain)Iterator;
 				if(!Iterator.equals(Plateau.getInstance().getJoueurActuel()))
 				{
 					HBox H1 = new HBox();
 					Text nom1 = new Text(Iterator.getNom());
 					H1.getChildren().add(nom1);
-					//H1.setPrefWidth(30);
-					//H1.setMinWidth(30);
-					
 					H1.setSpacing(20);
 					list.getItems().add(H1);
 				}
-				
-			}
 	
 		}
 		list.getSelectionModel().select(0);
@@ -130,11 +127,8 @@ public class controleurProprietes{
 				String joueurSelect = T.getText();
 				for(Joueur Iterator : Plateau.getInstance().getListeJoueur())
 				{
-					if(Iterator instanceof JoueurHumain)
-					{
-						JoueurHumain joueur= (JoueurHumain)Iterator;
 						
-						if(joueur.getNom().equals(joueurSelect))
+						if(Iterator.getNom().equals(joueurSelect))
 						{
 							for(CasesProprietes caseprop: Plateau.getInstance().getJoueurActuel().getProprietes())
 							{
@@ -144,25 +138,22 @@ public class controleurProprietes{
 										int p = Integer.parseInt(Prix.getText().trim());
 										if(p>0) {
 											try {
-												Plateau.getInstance().getJoueurActuel().vendre(caseprop, joueur,p);
+												Plateau.getInstance().getJoueurActuel().vendre(caseprop, Iterator,p);
 												dialog.close();
 												refresh();
 											} catch (alertException e) {
-												boiteAlerte A = new boiteAlerte("Action impossible",e.getMsg());
-												A.show();
+												boiteAlerte.afficherBoite(e);
 											}						
 											
 										}
 										else {
-											boiteAlerte A = new boiteAlerte("Vente impossible","Le prix doit être superieur à 0");
-											A.show();
+											boiteAlerte.afficherBoite("Vente impossible","Le prix doit être superieur à 0");
 											return ;
 										}	
 									
 								}
 								else {
-									boiteAlerte B = new boiteAlerte("Vente impossible","Entrez un prix valide");
-									B.show();
+									boiteAlerte.afficherBoite("Vente impossible","Entrez un prix valide");
 									return ;
 								}
 							}
@@ -170,7 +161,6 @@ public class controleurProprietes{
 							
 						}
 					}
-				}
 				
 				
 
@@ -202,8 +192,7 @@ public class controleurProprietes{
 					try {
 						iterator.ajouterMaison();
 					} catch (alertException e) {
-						boiteAlerte A = new boiteAlerte("Action impossible",e.getMsg());
-						A.show();
+						boiteAlerte.afficherBoite(e);
 					}
 					
 				}
@@ -221,8 +210,7 @@ public class controleurProprietes{
 				try {
 					iterator.ajouterHotel();
 				} catch (alertException e) {
-					boiteAlerte A = new boiteAlerte("Action impossible",e.getMsg());
-					A.show();
+					boiteAlerte.afficherBoite(e);
 				}
 			}
 		}
@@ -241,8 +229,7 @@ public class controleurProprietes{
 				try {
 					iterator.retirerHotel();
 				} catch (alertException e) {
-					boiteAlerte A = new boiteAlerte("Action impossible",e.getMsg());
-					A.show();
+					boiteAlerte.afficherBoite(e);
 				}
 			}
 		}
@@ -260,14 +247,134 @@ public class controleurProprietes{
 				try {
 					iterator.retirerMaison();
 				} catch (alertException e) {
-					boiteAlerte A = new boiteAlerte("Action impossible",e.getMsg());
-					A.show();
+					boiteAlerte.afficherBoite(e);
 				}
 			}
 		}
 		refresh();
 	}	
+	public void Echanger(ActionEvent event) {
+		HBox H = list.getSelectionModel().getSelectedItem();
+		Text T = (Text)H.getChildren().get(0);
+		String nom = T.getText();
+		for(CasesProprietes iterator: Plateau.getInstance().getJoueurActuel().getProprietes())
+		{
+			if(iterator.getNomCase().equals(nom))
+			{
+				try {
+					iterator.echangerHotel();
+				} catch (alertException e) {
+					boiteAlerte.afficherBoite(e);
+				}
+			}
+		}
+		refresh();
+	}
+	public void hypotheque()
+	{
+		HBox H = list.getSelectionModel().getSelectedItem();
+		Text T = (Text)H.getChildren().get(0);
+		String nom = T.getText();
+		for(CasesProprietes iterator: Plateau.getInstance().getJoueurActuel().getProprietes())
+		{
+			if(iterator.getNomCase().equals(nom))
+			{
+				try {
+				Plateau.getInstance().getJoueurActuel().mettreHypotheque(iterator);
+				} catch (alertException e) {
+					boiteAlerte.afficherBoite(e);
+				}
+				
+			}
+		}
+		refresh();
+	}
+	
+	public void vendreLibe() {
+	
+		Dialog<String> dialog = new Dialog<>();
+		
+		AnchorPane Anchor = new AnchorPane();
+		HBox hbox = new HBox();
+		VBox V = new VBox();
+		ListView<HBox> list=new ListView<HBox>();
+		V.getChildren().add(list);
+		hbox.getChildren().add(V);
+		for(Joueur Iterator : Plateau.getInstance().getListeJoueur()) 
+		{
+				if(!Iterator.equals(Plateau.getInstance().getJoueurActuel()))
+				{
+					HBox H1 = new HBox();
+					Text nom1 = new Text(Iterator.getNom());
+					H1.getChildren().add(nom1);
+					H1.setSpacing(20);
+					list.getItems().add(H1);
+				}
+	
+		}
+		list.getSelectionModel().select(0);
+		Button Vendre = new Button();
+		Vendre.setText("Vendre");
+		TextField Prix = new TextField();
+		Prix.setText("Entrez votre prix");
+		Vendre.setOnAction(new EventHandler<ActionEvent>() {
+		
+		    @Override
+		    public void handle(ActionEvent event) {
+		    	HBox H = list.getSelectionModel().getSelectedItem();
+				Text T = (Text)H.getChildren().get(0);
+				String joueurSelect = T.getText();
+				for(Joueur Iterator : Plateau.getInstance().getListeJoueur())
+				{
+					if(Iterator instanceof JoueurHumain)
+					{
+						JoueurHumain joueur= (JoueurHumain)Iterator;
+						
+						if(joueur.getNom().equals(joueurSelect))
+						{
+							if(Prix.getText().trim().matches("[+-]?\\d*(\\.\\d+)?") && !Prix.getText().trim().isEmpty()) {
+								int p = Integer.parseInt(Prix.getText().trim());
+								if(p>0) {
+									try {
+										Plateau.getInstance().getJoueurActuel().vendreCarteLiberation(joueur, p);
+										dialog.close();
+										refresh();
+									} catch (alertException e) {
+										boiteAlerte.afficherBoite(e);
+									}						
+									
+								}
+								else {
+									boiteAlerte.afficherBoite("Vente impossible","Le prix doit être superieur à 0");
+									return ;
+								}	
+								
+							}
+							else {
+								boiteAlerte.afficherBoite("Vente impossible","Entrez un prix valide");
+								return ;
+							}
+						}
+				}
+				
+				
+
+		    }
+		  }
+		});
+		hbox.getChildren().addAll(Vendre,Prix);
+		Anchor.getChildren().add(hbox);
+		ButtonType buttonTypeOkAnnuler = new ButtonType("Annuler", ButtonData.CANCEL_CLOSE);
+		dialog.getDialogPane().getButtonTypes().add(buttonTypeOkAnnuler);
+		dialog.getDialogPane().setContent(Anchor);
+		dialog.setTitle("Vente");
+		dialog.show();
+	}
+	
+	
+	
 	public void refresh() {
+		_NbCartes.setText(Integer.toString(Plateau.getInstance().getJoueurActuel().getNbCarteLiberation()));
 		list.getItems().clear();
 		for(CasesProprietes Iterator : Plateau.getInstance().getJoueurActuel().getProprietes()) {
 			HBox H = new HBox();

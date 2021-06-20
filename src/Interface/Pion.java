@@ -128,6 +128,7 @@ public class Pion {
 		case 38:deplacerPion(10,8);
 		break;
 		case 39:deplacerPion(10,9);
+		break;
 		}
 	}
 	

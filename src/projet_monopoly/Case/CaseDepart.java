@@ -19,7 +19,8 @@ public class CaseDepart extends Cases{
 		SommeDepart = sommeDepart;
 	}
 	@Override
-	public void arretSurLaCase(JoueurHumain J) {		
+	public void arretSurLaCase(JoueurHumain J) {	
+		
 	}
 
 }

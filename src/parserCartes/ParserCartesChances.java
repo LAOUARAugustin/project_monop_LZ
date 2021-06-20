@@ -10,7 +10,7 @@ public class ParserCartesChances extends Parser{
 	
 	public ParserCartesChances(Parser suivant) {
 		super(suivant);
-		// TODO Auto-generated constructor stub
+	
 	}
 
 	@Override

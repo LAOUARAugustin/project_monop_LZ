@@ -12,11 +12,11 @@ public class CasesCartes extends Cases{
 	public void arretSurLaCase(JoueurHumain J) throws alertException  {
 		if(this.nomCase.equals("CAISSE COMMUNAUTE")) {
 			J.TirerCarteCommunaute();
-			controleurPlateau.passerMessage(J.getNom() + " a tiré une carte caisse de communauté");
+			controleurPlateau.passerMessage(J.getNom() + " a tiré une carte caisse de communauté.");
 		}
 		if(this.nomCase.equals("CHANCE")) {
 			J.TirerCarteChance();
-			controleurPlateau.passerMessage(J.getNom() + " a tiré une carte chance");
+			controleurPlateau.passerMessage(J.getNom() + " a tiré une carte chance." );
 
 		}
 	}

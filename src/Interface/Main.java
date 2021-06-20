@@ -54,7 +54,7 @@ public class Main extends Application {
 		Pion pion2 = new Pion("/interface/pion2.png");
 		Pion pion3 = new Pion("/interface/pion3.png");
 		Pion pion4 = new Pion("/interface/pion4.png");
-		Plateau.getInstance().initFichier(fichierChance, fichierCommunaute, fichierTerrains);
+		Plateau.getInstance().initFichier(fichierChance,fichierCommunaute, fichierTerrains);
 		JoueurHumain J1 = new JoueurHumain("Augustin", Plateau.getInstance().getListeCases().get(0), pion1);
 		JoueurHumain J2 = new JoueurHumain("Aurélien", Plateau.getInstance().getListeCases().get(0), pion2);
 		//JoueurHumain J3 = new JoueurHumain("Valérie", Plateau.getInstance().getListeCases().get(0), pion3);

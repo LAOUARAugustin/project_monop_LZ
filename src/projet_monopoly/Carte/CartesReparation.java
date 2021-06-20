@@ -30,7 +30,6 @@ public class CartesReparation extends Cartes{
 		}
 		int somme = nbMaison*prixParMaison + nbHotel*prixParHotel;
 		Joueur.payerJoueur(somme,Banque.getInstance());
-		controleurPlateau.passerMessage(Joueur.getNom()+" a payé " + somme + " à la banque.");
 	}
 
 	public int getPrixParMaison() {

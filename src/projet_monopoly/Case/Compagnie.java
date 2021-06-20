@@ -17,18 +17,20 @@ public class Compagnie extends CasesProprietes {
 	}
 	
 	public void arretSurLaCase(JoueurHumain J, int dé) {
+		if(this.isHypotheque()) {
+			return;
+		}
 		if(this.getProprietaire() == Banque.getInstance()) {
 			if(this.getProprietaire() == Banque.getInstance()) {
-				Alert alert = new Alert(AlertType.CONFIRMATION, "La propriété " + this.getNomCase() +  " n'appartient à aucun joueur, voulez vous l'acheter ?", ButtonType.YES, ButtonType.NO);
+				Alert alert = new Alert(AlertType.CONFIRMATION, "La propriété " + this.getNomCase() + " (" + this.getPrixBase() + " euros) " + " n'appartient à aucun joueur, voulez vous l'acheter ?", ButtonType.YES, ButtonType.NO);
 				alert.showAndWait();
 
 				if (alert.getResult() == ButtonType.YES) {
 					try {
 						J.acheter(this, this.getProprietaire(), this.getPrixBase());
-						controleurPlateau.passerMessage(this.getProprietaire().getNom() + " a acheté " + this.getNomCase());
+						controleurPlateau.passerMessage(this.getProprietaire().getNom() + " a acheté " + this.getNomCase()+ " (" + this.getPrixBase() + " euros)");
 					} catch (alertException e) {
-						boiteAlerte A = new boiteAlerte("Achat impossible",e.getMsg());
-						A.show();
+						boiteAlerte.afficherBoite(e);
 					}
 				}
 		}
@@ -70,6 +72,12 @@ public class Compagnie extends CasesProprietes {
 
 	@Override
 	public void retirerHotel() throws alertException {
+		throw new alertException("Il ne peut pas y avoir d'hotel sur une compagnie");
+		
+	}
+
+	@Override
+	public void echangerHotel() throws alertException {
 		throw new alertException("Il ne peut pas y avoir d'hotel sur une compagnie");
 		
 	}

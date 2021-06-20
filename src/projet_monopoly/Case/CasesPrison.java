@@ -12,6 +12,7 @@ public class CasesPrison extends Cases{
 	@Override
 	public void arretSurLaCase(JoueurHumain J) {
 		J.AllerEnPrison();
+		
 	}
 
 }

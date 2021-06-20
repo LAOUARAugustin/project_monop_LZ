@@ -18,7 +18,6 @@ private int montant;
 			if(!iterator.equals(Joueur))
 			{
 				iterator.payerJoueur(montant, Joueur);
-				controleurPlateau.passerMessage(Joueur.getNom()+" a reçu "+montant+" pour son anniversaire !");
 			}
 		}
 	}

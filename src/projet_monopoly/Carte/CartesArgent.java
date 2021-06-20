@@ -11,11 +11,9 @@ public class CartesArgent extends Cartes {
 	public void effet(JoueurHumain Joueur) {
 		if(this.montant>0) {
 			Banque.getInstance().payerJoueur(montant, Joueur);
-			controleurPlateau.passerMessage(Joueur.getNom()+" a reçu "+montant);
 		}
 		else {
 			Joueur.payerJoueur(-(montant), Banque.getInstance());
-			controleurPlateau.passerMessage(Joueur.getNom()+" a payé "+montant+" à la banque");
 		}
 	}
 	

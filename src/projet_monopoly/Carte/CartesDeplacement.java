@@ -1,8 +1,13 @@
 package projet_monopoly.Carte;
 
+import java.io.IOException;
+
+import Exception.alertException;
+import Exception.boiteAlerte;
 import Interface.controleurPlateau;
 import projet_monopoly.Plateau;
 import projet_monopoly.Case.Cases;
+import projet_monopoly.Case.Compagnie;
 import projet_monopoly.joueur.Banque;
 import projet_monopoly.joueur.JoueurHumain;
 
@@ -16,7 +21,6 @@ public class CartesDeplacement extends Cartes {
 		if(nbCases == 0) { // cas ou on se deplace sur une case 
 			int anciennePos = Joueur.getPosition().getNumeroCase();
 			Joueur.seDeplacer(nom);
-			controleurPlateau.passerMessage(Joueur.getNom()+" s'est deplacé jusqu'à "+ nom);
 			if(Joueur.getPosition().getNumeroCase()<=anciennePos && passerCaseDepart)
 				Banque.getInstance().payerJoueur(200, Joueur);
 		}
@@ -35,10 +39,23 @@ public class CartesDeplacement extends Cartes {
 					Joueur.setPosition(I);
 				}
 			}
-			controleurPlateau.passerMessage(Joueur.getNom()+"s'est deplacé de " + nbCases + " cases");
 			if(Joueur.getPosition().getNumeroCase()<=anciennePos && passerCaseDepart)
 				Banque.getInstance().payerJoueur(200, Joueur);
 			
+		}
+		if(Joueur.getPosition() instanceof Compagnie) {
+			Compagnie Case = (Compagnie)Joueur.getPosition();
+			int Somme = Joueur.LancerDé() + Joueur.LancerDé();
+			boiteAlerte.afficherBoite("Vous avez lancé les dés","Les dés ont fait un total de " + Somme);
+			Case.arretSurLaCase(Joueur, Somme);
+			return;
+		}
+		try {
+			Joueur.getPosition().arretSurLaCase(Joueur);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (alertException e) {
+			boiteAlerte.afficherBoite(e);
 		}
 	}
 

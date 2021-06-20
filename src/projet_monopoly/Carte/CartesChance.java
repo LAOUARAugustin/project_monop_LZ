@@ -39,7 +39,6 @@ public class CartesChance extends Cartes {
 			}
 		else {
 			Joueur.payerJoueur(montant,Banque.getInstance());	
-			controleurPlateau.passerMessage(Joueur.getNom()+" a payé "+montant);
 		}
 		
 	}

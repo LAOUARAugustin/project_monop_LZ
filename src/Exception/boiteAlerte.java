@@ -8,12 +8,21 @@ public class boiteAlerte {
 	private String Header;
 	private String content;
 	
-	public boiteAlerte(String h, String c) {
+	private boiteAlerte(String h, String c) {
 		this.Header = h;
 		this.content = c;
 	}
 	
-	public void show() {
+	public static void afficherBoite(alertException e) {
+		boiteAlerte A = new boiteAlerte("Action impossible", e.getMsg());
+		A.show();
+	}
+	
+	public static void afficherBoite(String header, String content) {
+		boiteAlerte A = new boiteAlerte(header, content);
+		A.show();
+	}
+	private void show() {
 
 		Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle("Information");

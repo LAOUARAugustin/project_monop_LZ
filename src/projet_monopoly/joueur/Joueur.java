@@ -12,7 +12,8 @@ public abstract class Joueur {
 	protected String nom;
 	protected int solde;
 	protected ArrayList<CasesProprietes> listeProprietes=new ArrayList<CasesProprietes>();
-	
+	protected ArrayList<Dette> listeDettes=new ArrayList<Dette>();
+
 	public String getNom() {
 		return nom;
 	}
@@ -32,12 +33,18 @@ public abstract class Joueur {
 		ArrayList<CasesProprietes> listCopie = new ArrayList<CasesProprietes>(this.listeProprietes);	
 		return listCopie;
 	}
+	public ArrayList<Dette> getDettes() {
+		ArrayList<Dette> listCopie = new ArrayList<Dette>(this.listeDettes);	
+		return listCopie;
+	}
 	public Joueur(String nom, int solde) {
 		this.setNom(nom);
 		this.setSolde(solde);
 	}
 	//methodes
-	
+	public void ajouterDette(Dette d) {
+		this.listeDettes.add(d);
+	}
 	public void ajouterProprietes(CasesProprietes prop)
 	{
 		this.listeProprietes.add(prop);
@@ -64,12 +71,14 @@ public abstract class Joueur {
 	}
 	
 	public void vendre(CasesProprietes propriete, Joueur acheteur, int prix) throws alertException {
-		Terrain T1 = (Terrain)propriete;
-		for(Cases iterator : this.getProprietes()) {
-			if(iterator instanceof Terrain) {
-				Terrain T2 = ((Terrain) iterator);
-				if(T2.getGroupe().equals(T1.getGroupe()) && (T2.getNbMaison()>0 || T2.isHotel()) ) {
-					throw new alertException("Vous ne pouvez pas vendre une propriété s'il y a des constructions sur le groupe de propriété");
+		if(propriete instanceof Terrain) {
+			Terrain T1 = (Terrain)propriete;
+			for(Cases iterator : this.getProprietes()) {
+				if(iterator instanceof Terrain) {
+					Terrain T2 = ((Terrain) iterator);
+					if(T2.getGroupe().equals(T1.getGroupe()) && (T2.getNbMaison()>0 || T2.isHotel()) ) {
+						throw new alertException("Vous ne pouvez pas vendre une propriété s'il y a des constructions sur le groupe de propriété");
+					}
 				}
 			}
 		}
@@ -113,9 +122,45 @@ public abstract class Joueur {
 	}
 	
 	public void payerJoueur(int somme, Joueur J) {
+		if(this.solde<somme) {
+			for(Dette Iterator : this.listeDettes) {
+				if(Iterator.getBeneficiere().equals(J)) {
+					Iterator.ajouterDette(somme - this.solde);
+					this.payer(somme);
+					J.recevoir(somme);
+					return;
+				}
+			}
+		}
 		this.payer(somme);
 		J.recevoir(somme);
 	}
+	
+	public boolean estEndette() {
+		for(Dette Iterator : this.listeDettes) {
+			if(Iterator.aUneDette())
+				return true;
+		}
+		return false;
+	}
+	
+	public int montantDetteTotal() {
+		int montant=0;
+		for(Dette Iterator : this.listeDettes) {
+			montant += Iterator.getMontantDette();
+		}
+		return montant;
+	}
+	
+	public void rembourser(int montant, Joueur J) throws alertException {
+		for(Dette Iterator : this.getDettes()) {
+			if(Iterator.getBeneficiere().equals(J)) {
+				Iterator.payerDette(montant);
+				this.payerJoueur(montant, J);
+			}
+		}
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
